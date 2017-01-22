@@ -1,0 +1,43 @@
+{
+  "name": "react-desktop-panels",
+  "version": "0.0.1",
+  "description": "desktop panels with react",
+  "main": "lib/index.js",
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
+    "babel-preset-env": "^1.1.4",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "eslint": "^3.12.2",
+    "eslint-plugin-react": "^6.8.0",
+    "watchify": "^3.8.0"
+  },
+  "scripts": {
+    "build:lib": "babel src -d lib",
+    "build:ex": "browserify example/index.js -v -t babelify -o build/bundle.js",
+    "lint": "eslint example --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YannickBochatay/react-desktop-panels.git"
+  },
+  "keywords": [
+    "react",
+    "menu",
+    "javascript"
+  ],
+  "author": "Yannick Bochatay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YannickBochatay/react-desktop-panels/issues"
+  },
+  "homepage": "https://github.com/YannickBochatay/react-desktop-panels#readme"
+}
