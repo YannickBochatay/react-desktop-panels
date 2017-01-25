@@ -23,6 +23,23 @@ class Split extends Component {
 
   }
 
+  getAndSetDim(callback) {
+
+    let { node } = this
+
+    if (!node) return
+
+    if (!node.getBoundingClientRect) node = ReactDOM.findDOMNode(node)
+
+    const dim = node.getBoundingClientRect()
+
+    this.setState({
+      width : dim.width,
+      height : dim.height
+    }, callback)
+
+  }
+
   handleDragStart(e) {
 
     this.xClick = e.pageX
@@ -44,16 +61,7 @@ class Split extends Component {
 
   componentDidMount() {
 
-    let { node } = this
-
-    if (!node.getBoundingClientRect) node = ReactDOM.findDOMNode(node)
-
-    const dim = node.getBoundingClientRect()
-
-    this.setState({
-      width : dim.width,
-      height : dim.height
-    })
+    this.getAndSetDim()
 
   }
 

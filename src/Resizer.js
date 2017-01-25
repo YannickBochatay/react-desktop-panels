@@ -39,10 +39,8 @@ class Resizer extends Component {
     const { vertical, ...rest } = this.props
 
     const style = {
-      width : vertical ? 3 : "100%",
-      height : vertical ? "100%" : 3,
-      borderBottom : vertical ? "none" : "1px solid gray",
-      borderRight : vertical ? "1px solid gray" : "none",
+      width : vertical ? 5 : "100%",
+      height : vertical ? "100%" : 5,
       display : "inline-block",
       cursor : vertical ? "ew-resize" : "ns-resize"
     }
