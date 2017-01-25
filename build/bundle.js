@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   "div",
   null,
   _react2.default.createElement(_Panel2.default, { style: { width: 500, height: 500, backgroundColor: "pink" } }),
-  _react2.default.createElement(_Panel2.default, { style: { width: 500, height: 500, backgroundColor: "yellow" } })
+  _react2.default.createElement(_Panel2.default, { vertical: true, style: { width: 500, height: 500, backgroundColor: "yellow" } })
 ), document.getElementById("content"));
 
 },{"../src/Panel":184,"react":183,"react-dom":3}],2:[function(require,module,exports){
@@ -20615,17 +20615,20 @@ var Panel = function (_Component) {
           height = _state.height;
 
 
-      var fullStyle = style;
+      var dimStyle = null;
 
-      if (width !== null && height !== null) fullStyle = _extends({}, style, { width: width, height: height });
+      if (width === null && height === null) dimStyle = { flex: 1 };else if (vertical) dimStyle = { width: width };else dimStyle = { height: height };
 
       return _react2.default.createElement(
         "div",
-        null,
-        _react2.default.createElement("div", _extends({}, rest, { style: fullStyle, ref: function ref(node) {
+        _extends({}, rest, {
+          style: _extends({}, style, { display: "flex", alignItems: "stretch", flexDirection: vertical ? "row" : "column" })
+        }),
+        _react2.default.createElement("div", { style: dimStyle, ref: function ref(node) {
             return _this2.node = node;
-          } })),
-        _react2.default.createElement(_Resizer2.default, { vertical: vertical, onDragStart: this.handleDragStart, onDrag: this.handleDrag })
+          } }),
+        _react2.default.createElement(_Resizer2.default, { vertical: vertical, onDragStart: this.handleDragStart, onDrag: this.handleDrag }),
+        _react2.default.createElement("div", { style: { flex: 1 } })
       );
     }
   }]);

@@ -52,20 +52,30 @@ class Panel extends Component {
 
   }
 
+  renderChildren() {
+
+  }
+
 
   render() {
 
     const { vertical, style, ...rest } = this.props
     const { width, height } = this.state
 
-    let fullStyle = style
+    let dimStyle = null
 
-    if (width !== null && height !== null) fullStyle = { ...style, width, height }
+    if (width === null && height === null) dimStyle = { flex : 1 }
+    else if (vertical) dimStyle = { width }
+    else dimStyle = { height }
 
     return (
-      <div>
-        <div { ...rest } style={ fullStyle } ref={ node => this.node = node }/>
+      <div
+        { ...rest }
+        style={ { ...style, display : "flex", alignItems : "stretch", flexDirection : vertical ? "row" : "column" } }
+      >
+        <div style={ dimStyle } ref={ node => this.node = node }/>
         <Resizer vertical={ vertical } onDragStart={ this.handleDragStart } onDrag={ this.handleDrag }/>
+        <div style={ { flex : 1 } } />
       </div>
     )
 

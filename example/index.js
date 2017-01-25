@@ -5,7 +5,7 @@ import Panel from "../src/Panel"
 render(
   <div>
     <Panel style={ { width : 500, height : 500, backgroundColor : "pink" } }/>
-    <Panel style={ { width : 500, height : 500, backgroundColor : "yellow" } }/>
+    <Panel vertical style={ { width : 500, height : 500, backgroundColor : "yellow" } }/>
   </div>,
   document.getElementById("content")
 )
