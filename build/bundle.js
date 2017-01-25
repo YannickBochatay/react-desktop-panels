@@ -7,20 +7,37 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require("react-dom");
 
-var _Panel = require("../src/Panel");
+var _Split = require("../src/Split");
 
-var _Panel2 = _interopRequireDefault(_Panel);
+var _Split2 = _interopRequireDefault(_Split);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _reactDom.render)(_react2.default.createElement(
-  "div",
-  null,
-  _react2.default.createElement(_Panel2.default, { style: { width: 500, height: 500, backgroundColor: "pink" } }),
-  _react2.default.createElement(_Panel2.default, { vertical: true, style: { width: 500, height: 500, backgroundColor: "yellow" } })
+  _Split2.default,
+  { style: { width: "100%", height: 500, backgroundColor: "#eee" } },
+  _react2.default.createElement(
+    "div",
+    null,
+    "Hello world"
+  ),
+  _react2.default.createElement(
+    _Split2.default,
+    { vertical: true },
+    _react2.default.createElement(
+      "div",
+      null,
+      "Hello Yannick"
+    ),
+    _react2.default.createElement(
+      "div",
+      null,
+      "Hello again"
+    )
+  )
 ), document.getElementById("content"));
 
-},{"../src/Panel":184,"react":183,"react-dom":3}],2:[function(require,module,exports){
+},{"../src/Split":185,"react":183,"react-dom":3}],2:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20533,131 +20550,6 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Resizer = require("./Resizer");
-
-var _Resizer2 = _interopRequireDefault(_Resizer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Panel = function (_Component) {
-  _inherits(Panel, _Component);
-
-  function Panel(props) {
-    _classCallCheck(this, Panel);
-
-    var _this = _possibleConstructorReturn(this, (Panel.__proto__ || Object.getPrototypeOf(Panel)).call(this, props));
-
-    _this.handleDragStart = _this.handleDragStart.bind(_this);
-    _this.handleDrag = _this.handleDrag.bind(_this);
-
-    _this.state = {
-      width: null,
-      height: null
-    };
-
-    _this.xClick = null;
-    _this.yClick = null;
-    _this.widthInit = null;
-    _this.heightInit = null;
-
-    return _this;
-  }
-
-  _createClass(Panel, [{
-    key: "handleDragStart",
-    value: function handleDragStart(e) {
-
-      this.xClick = e.pageX;
-      this.yClick = e.pageY;
-
-      this.widthInit = this.state.width;
-      this.heightInit = this.state.height;
-    }
-  }, {
-    key: "handleDrag",
-    value: function handleDrag(e) {
-      var vertical = this.props.vertical;
-
-
-      if (vertical) this.setState({ width: this.widthInit + e.pageX - this.xClick });else this.setState({ height: this.heightInit + e.pageY - this.yClick });
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-
-      var dim = this.node.getBoundingClientRect();
-
-      this.setState({
-        width: dim.width,
-        height: dim.height
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var _props = this.props,
-          vertical = _props.vertical,
-          style = _props.style,
-          rest = _objectWithoutProperties(_props, ["vertical", "style"]);
-
-      var _state = this.state,
-          width = _state.width,
-          height = _state.height;
-
-
-      var dimStyle = null;
-
-      if (width === null && height === null) dimStyle = { flex: 1 };else if (vertical) dimStyle = { width: width };else dimStyle = { height: height };
-
-      return _react2.default.createElement(
-        "div",
-        _extends({}, rest, {
-          style: _extends({}, style, { display: "flex", alignItems: "stretch", flexDirection: vertical ? "row" : "column" })
-        }),
-        _react2.default.createElement("div", { style: dimStyle, ref: function ref(node) {
-            return _this2.node = node;
-          } }),
-        _react2.default.createElement(_Resizer2.default, { vertical: vertical, onDragStart: this.handleDragStart, onDrag: this.handleDrag }),
-        _react2.default.createElement("div", { style: { flex: 1 } })
-      );
-    }
-  }]);
-
-  return Panel;
-}(_react.Component);
-
-Panel.propTypes = {
-  vertical: _react.PropTypes.bool,
-  style: _react.PropTypes.object
-};
-
-exports.default = Panel;
-
-},{"./Resizer":185,"react":183}],185:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -20716,7 +20608,6 @@ var Resizer = function (_Component) {
 
       var style = {
         width: vertical ? 3 : "100%",
-        // margin : vertical ? "0 2px" : "2px 0",
         height: vertical ? "100%" : 3,
         borderBottom: vertical ? "none" : "1px solid gray",
         borderRight: vertical ? "1px solid gray" : "none",
@@ -20746,4 +20637,179 @@ Resizer.propTypes = {
 
 exports.default = Resizer;
 
-},{"react":183}]},{},[1]);
+},{"react":183}],185:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require("react-dom");
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _Resizer = require("./Resizer");
+
+var _Resizer2 = _interopRequireDefault(_Resizer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Split = function (_Component) {
+  _inherits(Split, _Component);
+
+  function Split(props) {
+    _classCallCheck(this, Split);
+
+    var _this = _possibleConstructorReturn(this, (Split.__proto__ || Object.getPrototypeOf(Split)).call(this, props));
+
+    _this.handleDragStart = _this.handleDragStart.bind(_this);
+    _this.handleDrag = _this.handleDrag.bind(_this);
+
+    _this.state = {
+      width: null,
+      height: null
+    };
+
+    _this.xClick = null;
+    _this.yClick = null;
+    _this.widthInit = null;
+    _this.heightInit = null;
+
+    return _this;
+  }
+
+  _createClass(Split, [{
+    key: "handleDragStart",
+    value: function handleDragStart(e) {
+
+      this.xClick = e.pageX;
+      this.yClick = e.pageY;
+
+      this.widthInit = this.state.width;
+      this.heightInit = this.state.height;
+    }
+  }, {
+    key: "handleDrag",
+    value: function handleDrag(e) {
+      var vertical = this.props.vertical;
+
+
+      if (vertical) this.setState({ width: this.widthInit + e.pageX - this.xClick });else this.setState({ height: this.heightInit + e.pageY - this.yClick });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var node = this.node;
+
+
+      if (!node.getBoundingClientRect) node = _reactDom2.default.findDOMNode(node);
+
+      var dim = node.getBoundingClientRect();
+
+      this.setState({
+        width: dim.width,
+        height: dim.height
+      });
+    }
+  }, {
+    key: "renderFirstDiv",
+    value: function renderFirstDiv(elmt) {
+      var _this2 = this;
+
+      var _state = this.state,
+          width = _state.width,
+          height = _state.height;
+
+
+      var dimStyle = null;
+
+      if (width === null && height === null) dimStyle = { flex: 1 };else if (this.props.vertical) dimStyle = { width: width };else dimStyle = { height: height };
+
+      return _react2.default.cloneElement(elmt, {
+        style: _extends({}, elmt.props.style, dimStyle),
+        ref: function ref(node) {
+          return _this2.node = node;
+        },
+        key: "firstDiv"
+      });
+    }
+  }, {
+    key: "renderSecondDiv",
+    value: function renderSecondDiv(elmt) {
+
+      return _react2.default.cloneElement(elmt, {
+        style: _extends({}, elmt.props.style, { flex: 1 }),
+        key: "secondDiv"
+      });
+    }
+  }, {
+    key: "renderResizer",
+    value: function renderResizer() {
+
+      return _react2.default.createElement(_Resizer2.default, {
+        vertical: this.props.vertical,
+        onDragStart: this.handleDragStart,
+        onDrag: this.handleDrag,
+        key: "resizer"
+      });
+    }
+  }, {
+    key: "renderChildren",
+    value: function renderChildren() {
+
+      var children = _react2.default.Children.toArray(this.props.children);
+
+      if (children.length !== 2) throw new Error("you should have 2 elements as children");
+
+      return [this.renderFirstDiv(children[0]), this.renderResizer(), this.renderSecondDiv(children[1])];
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _props = this.props,
+          vertical = _props.vertical,
+          style = _props.style,
+          rest = _objectWithoutProperties(_props, ["vertical", "style"]);
+
+      var flexStyle = {
+        display: "flex",
+        alignItems: "stretch",
+        flexDirection: vertical ? "row" : "column"
+      };
+
+      return _react2.default.createElement(
+        "div",
+        _extends({}, rest, { style: _extends({}, style, flexStyle) }),
+        this.renderChildren()
+      );
+    }
+  }]);
+
+  return Split;
+}(_react.Component);
+
+Split.propTypes = {
+  vertical: _react.PropTypes.bool,
+  style: _react.PropTypes.object,
+  children: _react.PropTypes.node
+};
+
+exports.default = Split;
+
+},{"./Resizer":184,"react":183,"react-dom":3}]},{},[1]);

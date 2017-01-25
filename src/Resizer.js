@@ -40,7 +40,6 @@ class Resizer extends Component {
 
     const style = {
       width : vertical ? 3 : "100%",
-      // margin : vertical ? "0 2px" : "2px 0",
       height : vertical ? "100%" : 3,
       borderBottom : vertical ? "none" : "1px solid gray",
       borderRight : vertical ? "1px solid gray" : "none",

@@ -1,11 +1,14 @@
 import React from "react"
 import { render } from "react-dom"
-import Panel from "../src/Panel"
+import Split from "../src/Split"
 
 render(
-  <div>
-    <Panel style={ { width : 500, height : 500, backgroundColor : "pink" } }/>
-    <Panel vertical style={ { width : 500, height : 500, backgroundColor : "yellow" } }/>
-  </div>,
+  <Split style={ { width : "100%", height : 500, backgroundColor : "#eee" } }>
+    <div>Hello world</div>
+    <Split vertical>
+      <div>Hello Yannick</div>
+      <div>Hello again</div>
+    </Split>
+  </Split>,
   document.getElementById("content")
 )
