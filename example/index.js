@@ -3,23 +3,14 @@ import { render } from "react-dom"
 import Split from "../src/Split"
 import Panels from "../src/Panels"
 
-const style = { margin : 5 }
+class PanelExample extends React.Component {
 
-render(
-  <Split style={ { width : "100vw", height : "100vh" } }>
-    <Panels style={ style }>
-      <div label="panel 1">
-        This is the content of panel 1
-      </div>
-      <div label="panel 2">
-        And now this is the content of panel 2
-      </div>
-      <div label="panel 3">
-        Look, this is the content of panel 3
-      </div>
-    </Panels>
-    <Split vertical>
-      <Panels style={ style }>
+  render() {
+
+    const { style, ...rest } = this.props
+
+    return (
+      <Panels { ...rest } style={ { margin : 5, ...style } }>
         <div label="panel 1">
           This is the content of panel 1
         </div>
@@ -30,41 +21,21 @@ render(
           Look, this is the content of panel 3
         </div>
       </Panels>
+    )
+
+  }
+}
+
+render(
+  <Split style={ { width : "100vw", height : "100vh" } }>
+    <PanelExample/>
+    <Split vertical>
+      <PanelExample/>
       <Split vertical>
-        <Panels style={ style }>
-          <div label="panel 1">
-            This is the content of panel 1
-          </div>
-          <div label="panel 2">
-            And now this is the content of panel 2
-          </div>
-          <div label="panel 3">
-            Look, this is the content of panel 3
-          </div>
-        </Panels>
+        <PanelExample/>
         <Split>
-          <Panels style={ style }>
-            <div label="panel 1">
-              This is the content of panel 1
-            </div>
-            <div label="panel 2">
-              And now this is the content of panel 2
-            </div>
-            <div label="panel 3">
-              Look, this is the content of panel 3
-            </div>
-          </Panels>
-          <Panels style={ style }>
-            <div label="panel 1">
-              This is the content of panel 1
-            </div>
-            <div label="panel 2">
-              And now this is the content of panel 2
-            </div>
-            <div label="panel 3">
-              Look, this is the content of panel 3
-            </div>
-          </Panels>
+          <PanelExample/>
+          <PanelExample/>
         </Split>
       </Split>
     </Split>

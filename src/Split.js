@@ -30,8 +30,6 @@ class Split extends Component {
 
     let { node } = this
 
-    if (!node) return
-
     if (!node.getBoundingClientRect) node = ReactDOM.findDOMNode(node)
 
     const dim = node.getBoundingClientRect()
@@ -48,8 +46,12 @@ class Split extends Component {
     this.xClick = e.pageX
     this.yClick = e.pageY
 
-    this.widthInit = this.state.width
-    this.heightInit = this.state.height
+    this.getAndSetDim(() => {
+
+      this.widthInit = this.state.width
+      this.heightInit = this.state.height
+
+    })
 
   }
 
@@ -74,6 +76,14 @@ class Split extends Component {
     const { vertical } = this.props
     const { width, height } = this.state
 
+    if (width === null) {
+
+      this.getAndSetDim(this.handleResize)
+
+      return
+
+    }
+
     if (!this.winWidth) this.setWinDim()
 
     if (vertical) this.setState({ width : Math.round(width * window.innerWidth / this.winWidth) })
@@ -84,8 +94,6 @@ class Split extends Component {
   }
 
   componentDidMount() {
-
-    this.getAndSetDim()
 
     window.addEventListener("resize", this.handleResize)
 
