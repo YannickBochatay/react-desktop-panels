@@ -23479,6 +23479,7 @@ var Split = function (_Component) {
 
     _this.handleDragStart = _this.handleDragStart.bind(_this);
     _this.handleDrag = _this.handleDrag.bind(_this);
+    _this.handleResize = _this.handleResize.bind(_this);
 
     _this.state = {
       width: null,
@@ -23489,6 +23490,8 @@ var Split = function (_Component) {
     _this.yClick = null;
     _this.widthInit = null;
     _this.heightInit = null;
+    _this.winWidth = null;
+    _this.winHeight = null;
 
     return _this;
   }
@@ -23529,19 +23532,49 @@ var Split = function (_Component) {
       if (vertical) this.setState({ width: this.widthInit + e.pageX - this.xClick });else this.setState({ height: this.heightInit + e.pageY - this.yClick });
     }
   }, {
+    key: "setWinDim",
+    value: function setWinDim() {
+
+      this.winWidth = window.innerWidth;
+      this.winHeight = window.innerHeight;
+    }
+  }, {
+    key: "handleResize",
+    value: function handleResize() {
+      var vertical = this.props.vertical;
+      var _state = this.state,
+          width = _state.width,
+          height = _state.height;
+
+
+      if (!this.winWidth) this.setWinDim();
+
+      if (vertical) this.setState({ width: Math.round(width * window.innerWidth / this.winWidth) });else this.setState({ height: Math.round(height * window.innerHeight / this.winHeight) });
+
+      this.setWinDim();
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
 
       this.getAndSetDim();
+
+      window.addEventListener("resize", this.handleResize);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+
+      window.removeEventListener("resize", this.handleResize);
     }
   }, {
     key: "renderFirstDiv",
     value: function renderFirstDiv(elmt) {
       var _this2 = this;
 
-      var _state = this.state,
-          width = _state.width,
-          height = _state.height;
+      var _state2 = this.state,
+          width = _state2.width,
+          height = _state2.height;
 
 
       var dimStyle = null;

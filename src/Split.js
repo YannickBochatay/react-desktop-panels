@@ -10,6 +10,7 @@ class Split extends Component {
 
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleDrag = this.handleDrag.bind(this)
+    this.handleResize = this.handleResize.bind(this)
 
     this.state = {
       width : null,
@@ -20,6 +21,8 @@ class Split extends Component {
     this.yClick = null
     this.widthInit = null
     this.heightInit = null
+    this.winWidth = null
+    this.winHeight = null
 
   }
 
@@ -59,9 +62,38 @@ class Split extends Component {
 
   }
 
+  setWinDim() {
+
+    this.winWidth = window.innerWidth
+    this.winHeight = window.innerHeight
+
+  }
+
+  handleResize() {
+
+    const { vertical } = this.props
+    const { width, height } = this.state
+
+    if (!this.winWidth) this.setWinDim()
+
+    if (vertical) this.setState({ width : Math.round(width * window.innerWidth / this.winWidth) })
+    else this.setState({ height : Math.round(height * window.innerHeight / this.winHeight) })
+
+    this.setWinDim()
+
+  }
+
   componentDidMount() {
 
     this.getAndSetDim()
+
+    window.addEventListener("resize", this.handleResize)
+
+  }
+
+  componentWillUnmount() {
+
+    window.removeEventListener("resize", this.handleResize)
 
   }
 
