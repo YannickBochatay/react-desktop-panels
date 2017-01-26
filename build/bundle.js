@@ -20645,7 +20645,8 @@ var styles = {
   liActive: {
     minHeight: 23,
     maxHeight: 23,
-    background: "white"
+    background: "white",
+    transform: "translateY(1px)"
   },
   content: {
     flex: 1,
@@ -20685,7 +20686,7 @@ var Panels = function (_Component) {
         var label = child.props.label;
 
 
-        var style = styles.li;
+        var style = _extends({}, styles.li);
 
         if (active === i) style = _extends({}, style, styles.liActive);
 

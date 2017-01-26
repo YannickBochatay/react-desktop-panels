@@ -30,7 +30,8 @@ const styles = {
   liActive : {
     minHeight : 23,
     maxHeight : 23,
-    background : "white"
+    background : "white",
+    transform : "translateY(1px)"
   },
   content : {
     flex : 1,
@@ -63,7 +64,7 @@ class Panels extends Component {
 
       const { label } = child.props
 
-      let style = styles.li
+      let style = { ...styles.li }
 
       if (active === i) style = { ...style, ...styles.liActive }
 
