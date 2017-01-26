@@ -36,9 +36,9 @@ class Resizer extends Component {
 
   render() {
 
-    const { vertical, ...rest } = this.props
+    const { vertical, style, ...rest } = this.props
 
-    const style = {
+    const baseStyle = {
       width : vertical ? 5 : "100%",
       height : vertical ? "100%" : 5,
       display : "inline-block",
@@ -49,7 +49,7 @@ class Resizer extends Component {
     return (
       <span
         { ...rest }
-        style={ style }
+        style={ { ...baseStyle, ...style } }
         onMouseDown={ this.handleMouseDown }
         ref={ node => this.node = node }
       />
@@ -62,7 +62,8 @@ Resizer.propTypes = {
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
-  vertical : PropTypes.bool
+  vertical : PropTypes.bool,
+  style : PropTypes.object
 }
 
 export default Resizer

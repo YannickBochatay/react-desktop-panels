@@ -1,30 +1,70 @@
 import React from "react"
 import { render } from "react-dom"
 import Split from "../src/Split"
-import Panel from "react-bootstrap/lib/Panel"
+import Panels from "../src/Panels"
 
 const style = { margin : 5 }
 
 render(
   <Split style={ { width : "100vw", height : "100vh" } }>
-    <Panel header="Panel example" style={ style }>
-      Panel content
-    </Panel>
+    <Panels style={ style }>
+      <div label="panel 1">
+        This is the content of panel 1
+      </div>
+      <div label="panel 2">
+        And now this is the content of panel 2
+      </div>
+      <div label="panel 3">
+        Look, this is the content of panel 3
+      </div>
+    </Panels>
     <Split vertical>
-      <Panel header="Panel example" style={ style }>
-        Panel content
-      </Panel>
+      <Panels style={ style }>
+        <div label="panel 1">
+          This is the content of panel 1
+        </div>
+        <div label="panel 2">
+          And now this is the content of panel 2
+        </div>
+        <div label="panel 3">
+          Look, this is the content of panel 3
+        </div>
+      </Panels>
       <Split vertical>
-        <Panel header="Panel example" style={ style }>
-          Panel content
-        </Panel>
+        <Panels style={ style }>
+          <div label="panel 1">
+            This is the content of panel 1
+          </div>
+          <div label="panel 2">
+            And now this is the content of panel 2
+          </div>
+          <div label="panel 3">
+            Look, this is the content of panel 3
+          </div>
+        </Panels>
         <Split>
-          <Panel header="Panel example" style={ style }>
-            Panel content
-          </Panel>
-          <Panel header="Panel example" style={ style }>
-            Panel content
-          </Panel>
+          <Panels style={ style }>
+            <div label="panel 1">
+              This is the content of panel 1
+            </div>
+            <div label="panel 2">
+              And now this is the content of panel 2
+            </div>
+            <div label="panel 3">
+              Look, this is the content of panel 3
+            </div>
+          </Panels>
+          <Panels style={ style }>
+            <div label="panel 1">
+              This is the content of panel 1
+            </div>
+            <div label="panel 2">
+              And now this is the content of panel 2
+            </div>
+            <div label="panel 3">
+              Look, this is the content of panel 3
+            </div>
+          </Panels>
         </Split>
       </Split>
     </Split>
