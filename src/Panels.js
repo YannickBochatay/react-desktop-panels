@@ -1,4 +1,5 @@
 import React, { PropTypes, Component, Children } from "react"
+import PanelTitle from "./PanelTitle"
 
 const styles = {
   container : {
@@ -14,29 +15,11 @@ const styles = {
     listStyleType : "none",
     cursor : "default"
   },
-  li : {
-    minWidth : 35,
-    flex : "0 1 125px",
-    minHeight : 20,
-    maxHeight : 20,
-    border : "1px solid #ddd",
-    borderBottom : "none",
-    padding : "0px 10px",
-    background : "#f5f5f5",
-    whiteSpace : "nowrap",
-    overflow : "hidden",
-    textOverflow : "ellipsis"
-  },
-  liActive : {
-    minHeight : 23,
-    maxHeight : 23,
-    background : "white",
-    transform : "translateY(1px)"
-  },
   content : {
     flex : 1,
     border : "1px solid #ddd",
-    padding : 5
+    padding : 5,
+    borderRadius : "0 0 3px 3px"
   }
 }
 
@@ -64,17 +47,32 @@ class Panels extends Component {
 
       const { label } = child.props
 
-      let style = { ...styles.li }
-
-      if (active === i) style = { ...style, ...styles.liActive }
-
       return (
-        <li style={ style } onClick={ this.handleClick.bind(this, i) } key={ "panelTitle" + i }>
+        <PanelTitle
+          active={ active === i }
+          onClick={ this.handleClick.bind(this, i) }
+          key={ "panelTitle" + i }
+        >
           { label }
-        </li>
+        </PanelTitle>
       )
 
     })
+
+  }
+
+  componentWillUpdate(nextProps) {
+
+    let { active } = this.state
+    const children = Children.toArray(nextProps.children)
+
+    if (!children[active]) {
+
+      while (!children[active]) active--
+
+      this.setState({ active })
+
+    }
 
   }
 

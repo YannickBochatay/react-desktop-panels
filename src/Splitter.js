@@ -2,15 +2,14 @@ import React, { PropTypes, Component } from "react"
 import ReactDOM from "react-dom"
 import Resizer from "./Resizer"
 
-class Split extends Component {
+class Splitter extends Component {
 
   constructor(props) {
 
     super(props)
 
-    this.handleDragStart = this.handleDragStart.bind(this)
-    this.handleDrag = this.handleDrag.bind(this)
     this.handleResize = this.handleResize.bind(this)
+    this.setDimInit = this.setDimInit.bind(this)
 
     this.state = {
       width : null,
@@ -46,12 +45,7 @@ class Split extends Component {
     this.xClick = e.pageX
     this.yClick = e.pageY
 
-    this.getAndSetDim(() => {
-
-      this.widthInit = this.state.width
-      this.heightInit = this.state.height
-
-    })
+    this.getAndSetDim(this.setDimInit)
 
   }
 
@@ -64,10 +58,27 @@ class Split extends Component {
 
   }
 
+  setDimInit() {
+
+    this.widthInit = this.state.width
+    this.heightInit = this.state.height
+
+  }
+
   setWinDim() {
 
     this.winWidth = window.innerWidth
     this.winHeight = window.innerHeight
+
+  }
+
+  hasResizer(childrenProps) {
+
+    if (!childrenProps) childrenProps = this.props.children
+
+    const children = React.Children.toArray(childrenProps)
+
+    return children[1] && children[1].type === Resizer
 
   }
 
@@ -76,15 +87,12 @@ class Split extends Component {
     const { vertical } = this.props
     const { width, height } = this.state
 
-    if (width === null) {
-
-      this.getAndSetDim(this.handleResize)
-
-      return
-
-    }
-
     if (!this.winWidth) this.setWinDim()
+
+    if (width === null || height === null) {
+      this.getAndSetDim(this.setDimInit)
+      return
+    }
 
     if (vertical) this.setState({ width : Math.round(width * window.innerWidth / this.winWidth) })
     else this.setState({ height : Math.round(height * window.innerHeight / this.winHeight) })
@@ -93,32 +101,58 @@ class Split extends Component {
 
   }
 
-  componentDidMount() {
+  attachResizeListener() {
 
     window.addEventListener("resize", this.handleResize)
 
   }
 
-  componentWillUnmount() {
+  detachResizeListener() {
 
     window.removeEventListener("resize", this.handleResize)
+
+  }
+
+  componentWillUpdate(nextProps) {
+
+    const hadResizer = this.hasResizer(this.props.children)
+    const hasResizer = this.hasResizer(nextProps.children)
+
+    if (hadResizer && !hasResizer) {
+      this.detachResizeListener()
+      this.setState({ width : null, height : null })
+    }
+    else if (!hadResizer && hasResizer) this.attachResizeListener()
+
+  }
+
+  componentDidMount() {
+
+    if (this.resizer) this.attachResizeListener()
+
+  }
+
+  componentWillUnmount() {
+
+    this.detachResizeListener()
 
   }
 
   renderFirstDiv(elmt) {
 
     const { width, height } = this.state
+    const { vertical } = this.props
 
-    let dimStyle = null
+    const style = { ...elmt.props.style }
 
-    if (width === null && height === null) dimStyle = { flex : 1 }
-    else if (this.props.vertical) dimStyle = { width }
-    else dimStyle = { height }
+    if (width === null && height === null) style.flex = 1
+    else if (vertical) style.width = width
+    else style.height = height
 
     return React.cloneElement(elmt, {
-      style : { ...elmt.props.style, ...dimStyle },
       ref : node => this.node = node,
-      key : "firstDiv"
+      key : "firstDiv",
+      style
     })
 
   }
@@ -132,16 +166,29 @@ class Split extends Component {
 
   }
 
-  renderResizer() {
+  renderResizer(resizer) {
 
-    return (
-      <Resizer
-        vertical={ this.props.vertical }
-        onDragStart={ this.handleDragStart }
-        onDrag={ this.handleDrag }
-        key="resizer"
-      />
-    )
+    if (resizer.type !== Resizer) throw new TypeError("argument should be a Resizer element")
+
+    return React.cloneElement(resizer, {
+
+      vertical : this.props.vertical,
+
+      onDragStart : e => {
+        this.handleDragStart(e)
+        if (resizer.props.onDragStart) resizer.props.onDragStart(e)
+      },
+
+      onDrag : e => {
+        this.handleDrag(e)
+        if (resizer.props.onDrag) resizer.props.onDrag(e)
+      },
+
+      key : "resizer",
+
+      ref : elmt => this.resizer = elmt
+
+    })
 
   }
 
@@ -149,13 +196,24 @@ class Split extends Component {
 
     const children = React.Children.toArray(this.props.children)
 
-    if (children.length !== 2) throw new Error("you should have 2 elements as children")
+    if (children.length !== 2 && children.length !== 3) throw new Error("you should have 2 or 3 elements as children")
 
-    return [
-      this.renderFirstDiv(children[0]),
-      this.renderResizer(),
-      this.renderSecondDiv(children[1])
-    ]
+    if (children.length === 3) {
+
+      return [
+        this.renderFirstDiv(children[0]),
+        this.renderResizer(children[1]),
+        this.renderSecondDiv(children[2])
+      ]
+
+    } else {
+
+      return [
+        this.renderFirstDiv(children[0]),
+        this.renderSecondDiv(children[1])
+      ]
+    }
+
 
   }
 
@@ -179,10 +237,10 @@ class Split extends Component {
   }
 }
 
-Split.propTypes = {
+Splitter.propTypes = {
   vertical : PropTypes.bool,
   style : PropTypes.object,
   children : PropTypes.node
 }
 
-export default Split
+export default Splitter
