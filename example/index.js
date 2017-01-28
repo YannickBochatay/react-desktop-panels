@@ -17,8 +17,8 @@ render(
     </Resizable>
 
     <Resizable>
-      <Splitter orientation="horizontal">
-        <Resizable orientation="horizontal">
+      <Splitter direction="column">
+        <Resizable direction="column">
           <PanelExample/>
         </Resizable>
         <Stretchable>
@@ -28,8 +28,8 @@ render(
     </Resizable>
 
     <Stretchable>
-      <Splitter orientation="horizontal">
-        <Resizable orientation="horizontal" style={ { height : "60%" } }>
+      <Splitter direction="column">
+        <Resizable direction="column" style={ { height : "60%" } }>
           <PanelExample/>
         </Resizable>
         <Stretchable>
@@ -38,8 +38,8 @@ render(
               <PanelExample/>
             </Resizable>
             <Stretchable>
-              <Splitter orientation="horizontal">
-                <Resizable orientation="horizontal">
+              <Splitter direction="column">
+                <Resizable direction="column">
                   <PanelExample/>
                 </Resizable>
                 <Stretchable>

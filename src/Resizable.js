@@ -37,10 +37,17 @@ class Resizable extends Component {
 
       const parent = node.parentNode
       const dimParent = parent.getBoundingClientRect()
+      const parentStyle = window.getComputedStyle(node.parentNode, null)
+      const paddingLeft = parseFloat(parentStyle.paddingLeft)
+      const paddingRight = parseFloat(parentStyle.paddingRight)
+      const paddingTop = parseFloat(parentStyle.paddingTop)
+      const paddingBottom = parseFloat(parentStyle.paddingBottom)
 
+      const widthParent = dimParent.width - paddingLeft - paddingRight
+      const heightParent = dimParent.height - paddingTop - paddingBottom
 
-      width = Math.round(width / dimParent.width * 10000) / 100 + "%"
-      height = Math.round(height / dimParent.height * 10000) / 100 + "%"
+      width = Math.round(width / widthParent * 10000) / 100 + "%"
+      height = Math.round(height / heightParent * 10000) / 100 + "%"
 
     }
 
@@ -69,9 +76,9 @@ class Resizable extends Component {
 
   handleDrag(e) {
 
-    const { orientation, resizerPos, minSize } = this.props
+    const { direction, resizerPos, minSize } = this.props
 
-    const vertical = (orientation === "vertical")
+    const vertical = (direction === "row")
 
     if (vertical) {
 
@@ -102,9 +109,9 @@ class Resizable extends Component {
 
   setStyle() {
 
-    const { orientation, style } = this.props
+    const { direction, style } = this.props
     const { width, height } = this.state
-    const vertical = (orientation === "vertical")
+    const vertical = (direction === "row")
 
     const fullStyle = {
       display : "flex",
@@ -125,7 +132,7 @@ class Resizable extends Component {
 
   render() {
 
-    const { orientation, children, resizerPos, ...rest } = this.props
+    const { direction, children, resizerPos, ...rest } = this.props
 
     delete rest.minSize
 
@@ -142,7 +149,7 @@ class Resizable extends Component {
 
     const resizer = (
       <Resizer
-        orientation={ orientation }
+        direction={ direction }
         onDragStart={ this.handleDragStart }
         onDrag={ this.handleDrag }
         onDragEnd={ this.handleDragEnd }
@@ -166,12 +173,12 @@ Resizable.propTypes = {
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
-  orientation : PropTypes.oneOf(["vertical", "horizontal"]),
+  direction : PropTypes.oneOf(["row", "column"]),
   minSize : PropTypes.number
 }
 
 Resizable.defaultProps = {
-  orientation : "vertical",
+  direction : "row",
   resizerPos : "after",
   minSize : 80
 }

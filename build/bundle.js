@@ -49,10 +49,10 @@ var PanelExample = function PanelExample(_ref) {
     null,
     _react2.default.createElement(
       _Splitter2.default,
-      { orientation: "horizontal" },
+      { direction: "column" },
       _react2.default.createElement(
         _Resizable2.default,
-        { orientation: "horizontal" },
+        { direction: "column" },
         _react2.default.createElement(PanelExample, null)
       ),
       _react2.default.createElement(
@@ -67,10 +67,10 @@ var PanelExample = function PanelExample(_ref) {
     null,
     _react2.default.createElement(
       _Splitter2.default,
-      { orientation: "horizontal" },
+      { direction: "column" },
       _react2.default.createElement(
         _Resizable2.default,
-        { orientation: "horizontal", style: { height: "60%" } },
+        { direction: "column", style: { height: "60%" } },
         _react2.default.createElement(PanelExample, null)
       ),
       _react2.default.createElement(
@@ -89,10 +89,10 @@ var PanelExample = function PanelExample(_ref) {
             null,
             _react2.default.createElement(
               _Splitter2.default,
-              { orientation: "horizontal" },
+              { direction: "column" },
               _react2.default.createElement(
                 _Resizable2.default,
-                { orientation: "horizontal" },
+                { direction: "column" },
                 _react2.default.createElement(PanelExample, null)
               ),
               _react2.default.createElement(
@@ -20686,9 +20686,17 @@ var Resizable = function (_Component) {
 
         var parent = node.parentNode;
         var dimParent = parent.getBoundingClientRect();
+        var parentStyle = window.getComputedStyle(node.parentNode, null);
+        var paddingLeft = parseFloat(parentStyle.paddingLeft);
+        var paddingRight = parseFloat(parentStyle.paddingRight);
+        var paddingTop = parseFloat(parentStyle.paddingTop);
+        var paddingBottom = parseFloat(parentStyle.paddingBottom);
 
-        width = Math.round(width / dimParent.width * 10000) / 100 + "%";
-        height = Math.round(height / dimParent.height * 10000) / 100 + "%";
+        var widthParent = dimParent.width - paddingLeft - paddingRight;
+        var heightParent = dimParent.height - paddingTop - paddingBottom;
+
+        width = Math.round(width / widthParent * 10000) / 100 + "%";
+        height = Math.round(height / heightParent * 10000) / 100 + "%";
       }
 
       this.setState({ width: width, height: height }, callback);
@@ -20716,12 +20724,12 @@ var Resizable = function (_Component) {
     key: "handleDrag",
     value: function handleDrag(e) {
       var _props = this.props,
-          orientation = _props.orientation,
+          direction = _props.direction,
           resizerPos = _props.resizerPos,
           minSize = _props.minSize;
 
 
-      var vertical = orientation === "vertical";
+      var vertical = direction === "row";
 
       if (vertical) {
 
@@ -20750,13 +20758,13 @@ var Resizable = function (_Component) {
     key: "setStyle",
     value: function setStyle() {
       var _props2 = this.props,
-          orientation = _props2.orientation,
+          direction = _props2.direction,
           style = _props2.style;
       var _state = this.state,
           width = _state.width,
           height = _state.height;
 
-      var vertical = orientation === "vertical";
+      var vertical = direction === "row";
 
       var fullStyle = _extends({
         display: "flex",
@@ -20776,10 +20784,10 @@ var Resizable = function (_Component) {
       var _this2 = this;
 
       var _props3 = this.props,
-          orientation = _props3.orientation,
+          direction = _props3.direction,
           children = _props3.children,
           resizerPos = _props3.resizerPos,
-          rest = _objectWithoutProperties(_props3, ["orientation", "children", "resizerPos"]);
+          rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos"]);
 
       delete rest.minSize;
 
@@ -20794,7 +20802,7 @@ var Resizable = function (_Component) {
       );
 
       var resizer = _react2.default.createElement(_Resizer2.default, {
-        orientation: orientation,
+        direction: direction,
         onDragStart: this.handleDragStart,
         onDrag: this.handleDrag,
         onDragEnd: this.handleDragEnd
@@ -20821,12 +20829,12 @@ Resizable.propTypes = {
   onDragStart: _react.PropTypes.func,
   onDrag: _react.PropTypes.func,
   onDragEnd: _react.PropTypes.func,
-  orientation: _react.PropTypes.oneOf(["vertical", "horizontal"]),
+  direction: _react.PropTypes.oneOf(["row", "column"]),
   minSize: _react.PropTypes.number
 };
 
 Resizable.defaultProps = {
-  orientation: "vertical",
+  direction: "row",
   resizerPos: "after",
   minSize: 80
 };
@@ -20901,11 +20909,11 @@ var Resizer = function (_Component) {
       var _this2 = this;
 
       var _props = this.props,
-          orientation = _props.orientation,
+          direction = _props.direction,
           style = _props.style,
-          rest = _objectWithoutProperties(_props, ["orientation", "style"]);
+          rest = _objectWithoutProperties(_props, ["direction", "style"]);
 
-      var vertical = orientation === "vertical";
+      var vertical = direction === "row";
 
       var baseStyle = {
         width: vertical ? 5 : "100%",
@@ -20932,11 +20940,11 @@ Resizer.propTypes = {
   onDrag: _react.PropTypes.func,
   onDragEnd: _react.PropTypes.func,
   style: _react.PropTypes.object,
-  orientation: _react.PropTypes.oneOf(["vertical", "horizontal"])
+  direction: _react.PropTypes.oneOf(["row", "column"])
 };
 
 Resizer.defaultProps = {
-  orientation: "vertical"
+  direction: "row"
 };
 
 exports.default = Resizer;
@@ -20958,21 +20966,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var defaultStyle = {
-  display: "flex",
-  alignItems: "stretch"
-};
-
 var Splitter = function Splitter(_ref) {
   var style = _ref.style,
-      orientation = _ref.orientation,
+      direction = _ref.direction,
       children = _ref.children,
-      rest = _objectWithoutProperties(_ref, ["style", "orientation", "children"]);
+      rest = _objectWithoutProperties(_ref, ["style", "direction", "children"]);
 
   return _react2.default.createElement(
     "div",
-    _extends({}, rest, { style: _extends({}, style, defaultStyle, {
-        flexDirection: orientation === "vertical" ? "row" : "column" })
+    _extends({}, rest, { style: _extends({}, style, {
+        display: "flex",
+        alignItems: "stretch",
+        flexDirection: direction })
     }),
     children
   );
@@ -20981,11 +20986,11 @@ var Splitter = function Splitter(_ref) {
 Splitter.propTypes = {
   style: _react.PropTypes.object,
   children: _react.PropTypes.node,
-  orientation: _react.PropTypes.oneOf(["vertical", "horizontal"])
+  direction: _react.PropTypes.oneOf(["row", "column"])
 };
 
 Splitter.defaultProps = {
-  orientation: "vertical"
+  direction: "row"
 };
 
 exports.default = Splitter;

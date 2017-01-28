@@ -36,9 +36,9 @@ class Resizer extends Component {
 
   render() {
 
-    const { orientation, style, ...rest } = this.props
+    const { direction, style, ...rest } = this.props
 
-    const vertical = (orientation === "vertical")
+    const vertical = (direction === "row")
 
     const baseStyle = {
       width : vertical ? 5 : "100%",
@@ -65,11 +65,11 @@ Resizer.propTypes = {
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
   style : PropTypes.object,
-  orientation : PropTypes.oneOf(["vertical", "horizontal"])
+  direction : PropTypes.oneOf(["row", "column"])
 }
 
 Resizer.defaultProps = {
-  orientation : "vertical"
+  direction : "row"
 }
 
 export default Resizer

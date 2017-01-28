@@ -1,15 +1,11 @@
 import React, { PropTypes } from "react"
 
-const defaultStyle = {
-  display : "flex",
-  alignItems : "stretch"
-}
-
-const Splitter = ({ style, orientation, children, ...rest }) => (
+const Splitter = ({ style, direction, children, ...rest }) => (
   <div { ...rest } style={ {
     ...style,
-    ...defaultStyle,
-    flexDirection : (orientation === "vertical" ? "row" : "column") }
+    display : "flex",
+    alignItems : "stretch",
+    flexDirection : direction }
   }
   >
     { children }
@@ -19,11 +15,11 @@ const Splitter = ({ style, orientation, children, ...rest }) => (
 Splitter.propTypes = {
   style : PropTypes.object,
   children : PropTypes.node,
-  orientation : PropTypes.oneOf(["vertical", "horizontal"])
+  direction : PropTypes.oneOf(["row", "column"])
 }
 
 Splitter.defaultProps = {
-  orientation : "vertical"
+  direction : "row"
 }
 
 export default Splitter
