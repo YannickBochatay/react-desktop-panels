@@ -38,7 +38,7 @@ var PanelExample = function PanelExample(_ref) {
 
 (0, _reactDom.render)(_react2.default.createElement(
   _Splitter2.default,
-  { style: { width: "100vw", height: "100vh" } },
+  { style: { width: "100vw", height: "100vh", padding: 5 } },
   _react2.default.createElement(
     _Resizable2.default,
     { style: { width: "20%" } },
@@ -70,7 +70,7 @@ var PanelExample = function PanelExample(_ref) {
       { orientation: "horizontal" },
       _react2.default.createElement(
         _Resizable2.default,
-        { orientation: "horizontal", style: { height: "20%" } },
+        { orientation: "horizontal", style: { height: "60%" } },
         _react2.default.createElement(PanelExample, null)
       ),
       _react2.default.createElement(
@@ -87,7 +87,20 @@ var PanelExample = function PanelExample(_ref) {
           _react2.default.createElement(
             _Stretchable2.default,
             null,
-            _react2.default.createElement(PanelExample, null)
+            _react2.default.createElement(
+              _Splitter2.default,
+              { orientation: "horizontal" },
+              _react2.default.createElement(
+                _Resizable2.default,
+                { orientation: "horizontal" },
+                _react2.default.createElement(PanelExample, null)
+              ),
+              _react2.default.createElement(
+                _Stretchable2.default,
+                null,
+                _react2.default.createElement(PanelExample, null)
+              )
+            )
           )
         )
       )
@@ -20671,7 +20684,7 @@ var Resizable = function (_Component) {
 
       if (units === "%") {
 
-        var parent = node.offsetParent;
+        var parent = node.parentNode;
         var dimParent = parent.getBoundingClientRect();
 
         width = Math.round(width / dimParent.width * 10000) / 100 + "%";
@@ -20704,15 +20717,25 @@ var Resizable = function (_Component) {
     value: function handleDrag(e) {
       var _props = this.props,
           orientation = _props.orientation,
-          resizerPos = _props.resizerPos;
+          resizerPos = _props.resizerPos,
+          minSize = _props.minSize;
 
 
       var vertical = orientation === "vertical";
 
-      var deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1);
-      var deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1);
+      if (vertical) {
 
-      if (vertical) this.setState({ width: this.widthInit + deltaX });else this.setState({ height: this.heightInit + deltaY });
+        var deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1);
+        var width = Math.max(minSize, this.widthInit + deltaX);
+
+        this.setState({ width: width });
+      } else {
+
+        var deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1);
+        var height = Math.max(minSize, this.heightInit + deltaY);
+
+        this.setState({ height: height });
+      }
 
       if (this.props.onDrag) this.props.onDrag(e);
     }
@@ -20758,6 +20781,8 @@ var Resizable = function (_Component) {
           resizerPos = _props3.resizerPos,
           rest = _objectWithoutProperties(_props3, ["orientation", "children", "resizerPos"]);
 
+      delete rest.minSize;
+
       var content = _react2.default.createElement(
         "div",
         { style: { flex: 1 } },
@@ -20796,12 +20821,14 @@ Resizable.propTypes = {
   onDragStart: _react.PropTypes.func,
   onDrag: _react.PropTypes.func,
   onDragEnd: _react.PropTypes.func,
-  orientation: _react.PropTypes.oneOf(["vertical", "horizontal"])
+  orientation: _react.PropTypes.oneOf(["vertical", "horizontal"]),
+  minSize: _react.PropTypes.number
 };
 
 Resizable.defaultProps = {
   orientation: "vertical",
-  resizerPos: "after"
+  resizerPos: "after",
+  minSize: 80
 };
 
 exports.default = Resizable;

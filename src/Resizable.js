@@ -35,8 +35,9 @@ class Resizable extends Component {
 
     if (units === "%") {
 
-      const parent = node.offsetParent
+      const parent = node.parentNode
       const dimParent = parent.getBoundingClientRect()
+
 
       width = Math.round(width / dimParent.width * 10000) / 100 + "%"
       height = Math.round(height / dimParent.height * 10000) / 100 + "%"
@@ -68,15 +69,25 @@ class Resizable extends Component {
 
   handleDrag(e) {
 
-    const { orientation, resizerPos } = this.props
+    const { orientation, resizerPos, minSize } = this.props
 
     const vertical = (orientation === "vertical")
 
-    const deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1)
-    const deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1)
+    if (vertical) {
 
-    if (vertical) this.setState({ width : this.widthInit + deltaX })
-    else this.setState({ height : this.heightInit + deltaY })
+      const deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1)
+      const width = Math.max(minSize, this.widthInit + deltaX)
+
+      this.setState({ width })
+
+    } else {
+
+      const deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1)
+      const height = Math.max(minSize, this.heightInit + deltaY)
+
+      this.setState({ height })
+
+    }
 
     if (this.props.onDrag) this.props.onDrag(e)
 
@@ -116,6 +127,8 @@ class Resizable extends Component {
 
     const { orientation, children, resizerPos, ...rest } = this.props
 
+    delete rest.minSize
+
     const content = (
       <div style={ { flex : 1 } }>
         { Children.map(children, child => (
@@ -153,12 +166,14 @@ Resizable.propTypes = {
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
-  orientation : PropTypes.oneOf(["vertical", "horizontal"])
+  orientation : PropTypes.oneOf(["vertical", "horizontal"]),
+  minSize : PropTypes.number
 }
 
 Resizable.defaultProps = {
   orientation : "vertical",
-  resizerPos : "after"
+  resizerPos : "after",
+  minSize : 80
 }
 
 

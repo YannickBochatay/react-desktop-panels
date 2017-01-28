@@ -10,7 +10,7 @@ const PanelExample = ({ style, ...rest }) => (
 
 render(
 
-  <Splitter style={ { width : "100vw", height : "100vh" } }>
+  <Splitter style={ { width : "100vw", height : "100vh", padding : 5 } }>
 
     <Resizable style={ { width : "20%" } }>
       <PanelExample/>
@@ -29,7 +29,7 @@ render(
 
     <Stretchable>
       <Splitter orientation="horizontal">
-        <Resizable orientation="horizontal" style={ { height : "20%" } }>
+        <Resizable orientation="horizontal" style={ { height : "60%" } }>
           <PanelExample/>
         </Resizable>
         <Stretchable>
@@ -38,7 +38,14 @@ render(
               <PanelExample/>
             </Resizable>
             <Stretchable>
-              <PanelExample/>
+              <Splitter orientation="horizontal">
+                <Resizable orientation="horizontal">
+                  <PanelExample/>
+                </Resizable>
+                <Stretchable>
+                  <PanelExample/>
+                </Stretchable>
+              </Splitter>
             </Stretchable>
           </Splitter>
         </Stretchable>
