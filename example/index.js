@@ -8,17 +8,17 @@ const panelStyle = { padding : 10, border : "1px solid #ddd" }
 
 render(
 
-  <Panel splittable style={ { width : "100vw", height : "100vh", padding : 5 } }>
+  <Panel style={ { width : "100vw", height : "100vh", padding : 5 } }>
 
     <Panel resizable defaultSize="20%" style={ panelStyle }>
       { content }
     </Panel>
 
-    <Panel splittable stretchable direction="column">
-      <Panel resizable direction="column" style={ panelStyle }>
+    <Panel stretchable direction="column">
+      <Panel resizable style={ panelStyle }>
         { content }
       </Panel>
-      <Panel splittable stretchable>
+      <Panel stretchable>
         <Panel resizable style={ panelStyle }>
           { content }
         </Panel>
@@ -28,7 +28,7 @@ render(
       </Panel>
     </Panel>
 
-    <Panel resizable resizerPos="before" defaultSize="20%" style={ panelStyle }>
+    <Panel resizable defaultSize="20%" style={ panelStyle }>
       { content }
     </Panel>
 
