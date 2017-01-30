@@ -1,62 +1,38 @@
 import React from "react"
 import { render } from "react-dom"
-import Resizable from "../src/Resizable"
-import Stretchable from "../src/Stretchable"
-import Splitter from "../src/Splitter"
+import Panel from "../src/Panel"
 
-const PanelExample = ({ style, ...rest }) => (
-  <div { ...rest } style={ { padding : 15, border : "1px solid gray", ...style } }>Hello world</div>
-)
+const content = "Hello world"
+
+const panelStyle = { padding : 10, border : "1px solid #ddd" }
 
 render(
 
-  <Splitter style={ { width : "100vw", height : "100vh", padding : 5 } }>
+  <Panel splittable style={ { width : "100vw", height : "100vh", padding : 5 } }>
 
-    <Resizable style={ { width : "20%" } }>
-      <PanelExample/>
-    </Resizable>
+    <Panel resizable defaultSize="20%" style={ panelStyle }>
+      { content }
+    </Panel>
 
-    <Resizable>
-      <Splitter direction="column">
-        <Resizable direction="column">
-          <PanelExample/>
-        </Resizable>
-        <Stretchable>
-          <PanelExample/>
-        </Stretchable>
-      </Splitter>
-    </Resizable>
+    <Panel splittable stretchable direction="column">
+      <Panel resizable direction="column" style={ panelStyle }>
+        { content }
+      </Panel>
+      <Panel splittable stretchable>
+        <Panel resizable style={ panelStyle }>
+          { content }
+        </Panel>
+        <Panel stretchable style={ panelStyle }>
+          { content }
+        </Panel>
+      </Panel>
+    </Panel>
 
-    <Stretchable>
-      <Splitter direction="column">
-        <Resizable direction="column" style={ { height : "60%" } }>
-          <PanelExample/>
-        </Resizable>
-        <Stretchable>
-          <Splitter>
-            <Resizable>
-              <PanelExample/>
-            </Resizable>
-            <Stretchable>
-              <Splitter direction="column">
-                <Resizable direction="column">
-                  <PanelExample/>
-                </Resizable>
-                <Stretchable>
-                  <PanelExample/>
-                </Stretchable>
-              </Splitter>
-            </Stretchable>
-          </Splitter>
-        </Stretchable>
-      </Splitter>
-    </Stretchable>
+    <Panel resizable resizerPos="before" defaultSize="20%" style={ panelStyle }>
+      { content }
+    </Panel>
 
-    <Resizable resizerPos="before" style={ { width : "20%" } }>
-      <PanelExample/>
-    </Resizable>
-
-  </Splitter>,
+  </Panel>,
 
   document.getElementById("content")
 )

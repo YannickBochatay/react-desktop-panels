@@ -1,4 +1,4 @@
-import React, { PropTypes, Component, Children } from "react"
+import React, { PropTypes, Component } from "react"
 import ReactDOM from "react-dom"
 import Resizer from "./Resizer"
 
@@ -76,21 +76,19 @@ class Resizable extends Component {
 
   handleDrag(e) {
 
-    const { direction, resizerPos, minSize } = this.props
+    const { direction, resizerPos, minSize, maxSize } = this.props
 
-    const vertical = (direction === "row")
-
-    if (vertical) {
+    if (direction === "row") {
 
       const deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1)
-      const width = Math.max(minSize, this.widthInit + deltaX)
+      const width = Math.min(maxSize, Math.max(minSize, this.widthInit + deltaX))
 
       this.setState({ width })
 
     } else {
 
       const deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1)
-      const height = Math.max(minSize, this.heightInit + deltaY)
+      const height = Math.min(maxSize, Math.max(minSize, this.heightInit + deltaY))
 
       this.setState({ height })
 
@@ -107,43 +105,46 @@ class Resizable extends Component {
 
   }
 
-  setStyle() {
+  componentWillMount() {
 
-    const { direction, style } = this.props
+    const { defaultSize, direction } = this.props
+
+    if (defaultSize != null) {
+      const prop = direction === "row" ? "width" : "height"
+
+      this.setState({ [prop] : defaultSize })
+    }
+  }
+
+  setContainerStyle() {
+
+    const { direction } = this.props
     const { width, height } = this.state
-    const vertical = (direction === "row")
 
-    const fullStyle = {
+    const style = {
       display : "flex",
       alignItems : "stretch",
-      flexDirection : (vertical ? "row" : "column"),
-      ...style
+      flexDirection : direction
     }
 
-    if (width === null && height === null) {
-      if (vertical && !fullStyle.width || !vertical && !fullStyle.height) fullStyle.flex = 1
-    }
-    else if (vertical) fullStyle.width = width
-    else fullStyle.height = height
+    if (width === null && height === null) style.flex = 1
+    else if (direction === "row") style.width = width
+    else style.height = height
 
-    return fullStyle
-
+    return style
   }
 
   render() {
 
-    const { direction, children, resizerPos, ...rest } = this.props
+    const { direction, children, resizerPos, style, ...rest } = this.props
 
     delete rest.minSize
+    delete rest.maxSize
+    delete rest.defaultSize
 
     const content = (
-      <div style={ { flex : 1 } }>
-        { Children.map(children, child => (
-            React.cloneElement(child, {
-              style : { height : "100%", ...child.props.style }
-            })
-          ))
-        }
+      <div { ...rest } style={ { flex : 1, ...style } } >
+        { children }
       </div>
     )
 
@@ -157,7 +158,7 @@ class Resizable extends Component {
     )
 
     return (
-      <div { ...rest } style={ this.setStyle() } ref={ node => this.node = node }>
+      <div style={ this.setContainerStyle() } ref={ node => this.node = node }>
         { resizerPos === "before" ? resizer : content }
         { resizerPos === "before" ? content : resizer }
       </div>
@@ -174,13 +175,16 @@ Resizable.propTypes = {
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
   direction : PropTypes.oneOf(["row", "column"]),
-  minSize : PropTypes.number
+  defaultSize : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  minSize : PropTypes.number,
+  maxSize : PropTypes.number
 }
 
 Resizable.defaultProps = {
   direction : "row",
   resizerPos : "after",
-  minSize : 80
+  minSize : 80,
+  maxSize : 2000
 }
 
 

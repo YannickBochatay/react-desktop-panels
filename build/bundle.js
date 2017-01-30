@@ -1,119 +1,61 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require("react-dom");
 
-var _Resizable = require("../src/Resizable");
+var _Panel = require("../src/Panel");
 
-var _Resizable2 = _interopRequireDefault(_Resizable);
-
-var _Stretchable = require("../src/Stretchable");
-
-var _Stretchable2 = _interopRequireDefault(_Stretchable);
-
-var _Splitter = require("../src/Splitter");
-
-var _Splitter2 = _interopRequireDefault(_Splitter);
+var _Panel2 = _interopRequireDefault(_Panel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+var content = "Hello world";
 
-var PanelExample = function PanelExample(_ref) {
-  var style = _ref.style,
-      rest = _objectWithoutProperties(_ref, ["style"]);
-
-  return _react2.default.createElement(
-    "div",
-    _extends({}, rest, { style: _extends({ padding: 15, border: "1px solid gray" }, style) }),
-    "Hello world"
-  );
-};
+var panelStyle = { padding: 10, border: "1px solid #ddd" };
 
 (0, _reactDom.render)(_react2.default.createElement(
-  _Splitter2.default,
-  { style: { width: "100vw", height: "100vh", padding: 5 } },
+  _Panel2.default,
+  { splittable: true, style: { width: "100vw", height: "100vh", padding: 5 } },
   _react2.default.createElement(
-    _Resizable2.default,
-    { style: { width: "20%" } },
-    _react2.default.createElement(PanelExample, null)
+    _Panel2.default,
+    { resizable: true, defaultSize: "20%", style: panelStyle },
+    content
   ),
   _react2.default.createElement(
-    _Resizable2.default,
-    null,
+    _Panel2.default,
+    { splittable: true, stretchable: true, direction: "column" },
     _react2.default.createElement(
-      _Splitter2.default,
-      { direction: "column" },
+      _Panel2.default,
+      { resizable: true, direction: "column", style: panelStyle },
+      content
+    ),
+    _react2.default.createElement(
+      _Panel2.default,
+      { splittable: true, stretchable: true },
       _react2.default.createElement(
-        _Resizable2.default,
-        { direction: "column" },
-        _react2.default.createElement(PanelExample, null)
+        _Panel2.default,
+        { resizable: true, style: panelStyle },
+        content
       ),
       _react2.default.createElement(
-        _Stretchable2.default,
-        null,
-        _react2.default.createElement(PanelExample, null)
+        _Panel2.default,
+        { stretchable: true, style: panelStyle },
+        content
       )
     )
   ),
   _react2.default.createElement(
-    _Stretchable2.default,
-    null,
-    _react2.default.createElement(
-      _Splitter2.default,
-      { direction: "column" },
-      _react2.default.createElement(
-        _Resizable2.default,
-        { direction: "column", style: { height: "60%" } },
-        _react2.default.createElement(PanelExample, null)
-      ),
-      _react2.default.createElement(
-        _Stretchable2.default,
-        null,
-        _react2.default.createElement(
-          _Splitter2.default,
-          null,
-          _react2.default.createElement(
-            _Resizable2.default,
-            null,
-            _react2.default.createElement(PanelExample, null)
-          ),
-          _react2.default.createElement(
-            _Stretchable2.default,
-            null,
-            _react2.default.createElement(
-              _Splitter2.default,
-              { direction: "column" },
-              _react2.default.createElement(
-                _Resizable2.default,
-                { direction: "column" },
-                _react2.default.createElement(PanelExample, null)
-              ),
-              _react2.default.createElement(
-                _Stretchable2.default,
-                null,
-                _react2.default.createElement(PanelExample, null)
-              )
-            )
-          )
-        )
-      )
-    )
-  ),
-  _react2.default.createElement(
-    _Resizable2.default,
-    { resizerPos: "before", style: { width: "20%" } },
-    _react2.default.createElement(PanelExample, null)
+    _Panel2.default,
+    { resizable: true, resizerPos: "before", defaultSize: "20%", style: panelStyle },
+    content
   )
 ), document.getElementById("content"));
 
-},{"../src/Resizable":184,"../src/Splitter":186,"../src/Stretchable":187,"react":183,"react-dom":3}],2:[function(require,module,exports){
+},{"../src/Panel":184,"react":183,"react-dom":3}],2:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -20615,7 +20557,77 @@ module.exports = require('./lib/React');
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Resizable = require("./Resizable");
+
+var _Resizable2 = _interopRequireDefault(_Resizable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var Panel = function Panel(_ref) {
+  var stretchable = _ref.stretchable,
+      resizable = _ref.resizable,
+      splittable = _ref.splittable,
+      direction = _ref.direction,
+      children = _ref.children,
+      style = _ref.style,
+      rest = _objectWithoutProperties(_ref, ["stretchable", "resizable", "splittable", "direction", "children", "style"]);
+
+  var fullStyle = _extends({}, style);
+
+  if (stretchable) fullStyle.flex = 1;
+
+  if (splittable) {
+
+    fullStyle = _extends({}, fullStyle, {
+      display: "flex",
+      alignItems: "stretch",
+      flexDirection: direction
+    });
+  }
+
+  if (resizable) {
+    return _react2.default.createElement(
+      _Resizable2.default,
+      _extends({}, rest, { style: fullStyle, direction: direction }),
+      children
+    );
+  } else {
+
+    return _react2.default.createElement(
+      "div",
+      _extends({}, rest, { style: fullStyle }),
+      children
+    );
+  }
+};
+
+Panel.propTypes = {
+  stretchable: _react.PropTypes.bool,
+  resizable: _react.PropTypes.bool,
+  splittable: _react.PropTypes.bool,
+  direction: _react.PropTypes.oneOf(["row", "column"]),
+  children: _react.PropTypes.node,
+  style: _react.PropTypes.object
+};
+
+exports.default = Panel;
+
+},{"./Resizable":185,"react":183}],185:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20638,6 +20650,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -20645,203 +20659,213 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Resizable = function (_Component) {
-    _inherits(Resizable, _Component);
+  _inherits(Resizable, _Component);
 
-    function Resizable(props) {
-        _classCallCheck(this, Resizable);
+  function Resizable(props) {
+    _classCallCheck(this, Resizable);
 
-        var _this = _possibleConstructorReturn(this, (Resizable.__proto__ || Object.getPrototypeOf(Resizable)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Resizable.__proto__ || Object.getPrototypeOf(Resizable)).call(this, props));
 
-        _this.setDimInit = _this.setDimInit.bind(_this);
-        _this.handleDragStart = _this.handleDragStart.bind(_this);
-        _this.handleDrag = _this.handleDrag.bind(_this);
-        _this.handleDragEnd = _this.handleDragEnd.bind(_this);
+    _this.setDimInit = _this.setDimInit.bind(_this);
+    _this.handleDragStart = _this.handleDragStart.bind(_this);
+    _this.handleDrag = _this.handleDrag.bind(_this);
+    _this.handleDragEnd = _this.handleDragEnd.bind(_this);
 
-        _this.state = {
-            width: null,
-            height: null
-        };
+    _this.state = {
+      width: null,
+      height: null
+    };
 
-        _this.xClick = null;
-        _this.yClick = null;
-        _this.widthInit = null;
-        _this.heightInit = null;
+    _this.xClick = null;
+    _this.yClick = null;
+    _this.widthInit = null;
+    _this.heightInit = null;
 
-        return _this;
+    return _this;
+  }
+
+  _createClass(Resizable, [{
+    key: "getAndSetDim",
+    value: function getAndSetDim(units, callback) {
+      var node = this.node;
+
+
+      if (!node.getBoundingClientRect) node = _reactDom2.default.findDOMNode(node);
+
+      var _node$getBoundingClie = node.getBoundingClientRect(),
+          width = _node$getBoundingClie.width,
+          height = _node$getBoundingClie.height;
+
+      if (units === "%") {
+
+        var parent = node.parentNode;
+        var dimParent = parent.getBoundingClientRect();
+        var parentStyle = window.getComputedStyle(node.parentNode, null);
+        var paddingLeft = parseFloat(parentStyle.paddingLeft);
+        var paddingRight = parseFloat(parentStyle.paddingRight);
+        var paddingTop = parseFloat(parentStyle.paddingTop);
+        var paddingBottom = parseFloat(parentStyle.paddingBottom);
+
+        var widthParent = dimParent.width - paddingLeft - paddingRight;
+        var heightParent = dimParent.height - paddingTop - paddingBottom;
+
+        width = Math.round(width / widthParent * 10000) / 100 + "%";
+        height = Math.round(height / heightParent * 10000) / 100 + "%";
+      }
+
+      this.setState({ width: width, height: height }, callback);
     }
+  }, {
+    key: "handleDragStart",
+    value: function handleDragStart(e) {
 
-    _createClass(Resizable, [{
-        key: "getAndSetDim",
-        value: function getAndSetDim(units, callback) {
-            var node = this.node;
+      this.xClick = e.pageX;
+      this.yClick = e.pageY;
 
+      this.getAndSetDim("px", this.setDimInit);
 
-            if (!node.getBoundingClientRect) node = _reactDom2.default.findDOMNode(node);
+      if (this.props.onDragStart) this.props.onDragStart(e);
+    }
+  }, {
+    key: "handleDragEnd",
+    value: function handleDragEnd(e) {
 
-            var _node$getBoundingClie = node.getBoundingClientRect(),
-                width = _node$getBoundingClie.width,
-                height = _node$getBoundingClie.height;
+      this.getAndSetDim("%");
 
-            if (units === "%") {
-
-                var parent = node.parentNode;
-                var dimParent = parent.getBoundingClientRect();
-                var parentStyle = window.getComputedStyle(node.parentNode, null);
-                var paddingLeft = parseFloat(parentStyle.paddingLeft);
-                var paddingRight = parseFloat(parentStyle.paddingRight);
-                var paddingTop = parseFloat(parentStyle.paddingTop);
-                var paddingBottom = parseFloat(parentStyle.paddingBottom);
-
-                var widthParent = dimParent.width - paddingLeft - paddingRight;
-                var heightParent = dimParent.height - paddingTop - paddingBottom;
-
-                width = Math.round(width / widthParent * 10000) / 100 + "%";
-                height = Math.round(height / heightParent * 10000) / 100 + "%";
-            }
-
-            this.setState({ width: width, height: height }, callback);
-        }
-    }, {
-        key: "handleDragStart",
-        value: function handleDragStart(e) {
-
-            this.xClick = e.pageX;
-            this.yClick = e.pageY;
-
-            this.getAndSetDim("px", this.setDimInit);
-
-            if (this.props.onDragStart) this.props.onDragStart(e);
-        }
-    }, {
-        key: "handleDragEnd",
-        value: function handleDragEnd(e) {
-
-            this.getAndSetDim("%");
-
-            if (this.props.onDragEnd) this.props.onDragEnd(e);
-        }
-    }, {
-        key: "handleDrag",
-        value: function handleDrag(e) {
-            var _props = this.props,
-                direction = _props.direction,
-                resizerPos = _props.resizerPos,
-                minSize = _props.minSize;
+      if (this.props.onDragEnd) this.props.onDragEnd(e);
+    }
+  }, {
+    key: "handleDrag",
+    value: function handleDrag(e) {
+      var _props = this.props,
+          direction = _props.direction,
+          resizerPos = _props.resizerPos,
+          minSize = _props.minSize,
+          maxSize = _props.maxSize;
 
 
-            var vertical = direction === "row";
+      if (direction === "row") {
 
-            if (vertical) {
+        var deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1);
+        var width = Math.min(maxSize, Math.max(minSize, this.widthInit + deltaX));
 
-                var deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1);
-                var width = Math.max(minSize, this.widthInit + deltaX);
+        this.setState({ width: width });
+      } else {
 
-                this.setState({ width: width });
-            } else {
+        var deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1);
+        var height = Math.min(maxSize, Math.max(minSize, this.heightInit + deltaY));
 
-                var deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1);
-                var height = Math.max(minSize, this.heightInit + deltaY);
+        this.setState({ height: height });
+      }
 
-                this.setState({ height: height });
-            }
+      if (this.props.onDrag) this.props.onDrag(e);
+    }
+  }, {
+    key: "setDimInit",
+    value: function setDimInit() {
 
-            if (this.props.onDrag) this.props.onDrag(e);
-        }
-    }, {
-        key: "setDimInit",
-        value: function setDimInit() {
+      this.widthInit = this.state.width;
+      this.heightInit = this.state.height;
+    }
+  }, {
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      var _props2 = this.props,
+          defaultSize = _props2.defaultSize,
+          direction = _props2.direction;
 
-            this.widthInit = this.state.width;
-            this.heightInit = this.state.height;
-        }
-    }, {
-        key: "setStyle",
-        value: function setStyle() {
-            var _props2 = this.props,
-                direction = _props2.direction,
-                style = _props2.style;
-            var _state = this.state,
-                width = _state.width,
-                height = _state.height;
 
-            var vertical = direction === "row";
+      if (defaultSize != null) {
+        var prop = direction === "row" ? "width" : "height";
 
-            var fullStyle = _extends({
-                display: "flex",
-                alignItems: "stretch",
-                flexDirection: vertical ? "row" : "column"
-            }, style);
+        this.setState(_defineProperty({}, prop, defaultSize));
+      }
+    }
+  }, {
+    key: "setContainerStyle",
+    value: function setContainerStyle() {
+      var direction = this.props.direction;
+      var _state = this.state,
+          width = _state.width,
+          height = _state.height;
 
-            if (width === null && height === null) {
-                if (vertical && !fullStyle.width || !vertical && !fullStyle.height) fullStyle.flex = 1;
-            } else if (vertical) fullStyle.width = width;else fullStyle.height = height;
 
-            return fullStyle;
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var _this2 = this;
+      var style = {
+        display: "flex",
+        alignItems: "stretch",
+        flexDirection: direction
+      };
 
-            var _props3 = this.props,
-                direction = _props3.direction,
-                children = _props3.children,
-                resizerPos = _props3.resizerPos,
-                rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos"]);
+      if (width === null && height === null) style.flex = 1;else if (direction === "row") style.width = width;else style.height = height;
 
-            delete rest.minSize;
+      return style;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
 
-            var content = _react2.default.createElement(
-                "div",
-                { style: { flex: 1 } },
-                _react.Children.map(children, function (child) {
-                    return _react2.default.cloneElement(child, {
-                        style: _extends({ height: "100%" }, child.props.style)
-                    });
-                })
-            );
+      var _props3 = this.props,
+          direction = _props3.direction,
+          children = _props3.children,
+          resizerPos = _props3.resizerPos,
+          style = _props3.style,
+          rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos", "style"]);
 
-            var resizer = _react2.default.createElement(_Resizer2.default, {
-                direction: direction,
-                onDragStart: this.handleDragStart,
-                onDrag: this.handleDrag,
-                onDragEnd: this.handleDragEnd
-            });
+      delete rest.minSize;
+      delete rest.maxSize;
+      delete rest.defaultSize;
 
-            return _react2.default.createElement(
-                "div",
-                _extends({}, rest, { style: this.setStyle(), ref: function ref(node) {
-                        return _this2.node = node;
-                    } }),
-                resizerPos === "before" ? resizer : content,
-                resizerPos === "before" ? content : resizer
-            );
-        }
-    }]);
+      var content = _react2.default.createElement(
+        "div",
+        _extends({}, rest, { style: _extends({ flex: 1 }, style) }),
+        children
+      );
 
-    return Resizable;
+      var resizer = _react2.default.createElement(_Resizer2.default, {
+        direction: direction,
+        onDragStart: this.handleDragStart,
+        onDrag: this.handleDrag,
+        onDragEnd: this.handleDragEnd
+      });
+
+      return _react2.default.createElement(
+        "div",
+        { style: this.setContainerStyle(), ref: function ref(node) {
+            return _this2.node = node;
+          } },
+        resizerPos === "before" ? resizer : content,
+        resizerPos === "before" ? content : resizer
+      );
+    }
+  }]);
+
+  return Resizable;
 }(_react.Component);
 
 Resizable.propTypes = {
-    children: _react.PropTypes.node,
-    style: _react.PropTypes.object,
-    resizerPos: _react.PropTypes.oneOf(["before", "after"]),
-    onDragStart: _react.PropTypes.func,
-    onDrag: _react.PropTypes.func,
-    onDragEnd: _react.PropTypes.func,
-    direction: _react.PropTypes.oneOf(["row", "column"]),
-    minSize: _react.PropTypes.number
+  children: _react.PropTypes.node,
+  style: _react.PropTypes.object,
+  resizerPos: _react.PropTypes.oneOf(["before", "after"]),
+  onDragStart: _react.PropTypes.func,
+  onDrag: _react.PropTypes.func,
+  onDragEnd: _react.PropTypes.func,
+  direction: _react.PropTypes.oneOf(["row", "column"]),
+  defaultSize: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
+  minSize: _react.PropTypes.number,
+  maxSize: _react.PropTypes.number
 };
 
 Resizable.defaultProps = {
-    direction: "row",
-    resizerPos: "after",
-    minSize: 80
+  direction: "row",
+  resizerPos: "after",
+  minSize: 80,
+  maxSize: 2000
 };
 
 exports.default = Resizable;
 
-},{"./Resizer":185,"react":183,"react-dom":3}],185:[function(require,module,exports){
+},{"./Resizer":186,"react":183,"react-dom":3}],186:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20948,91 +20972,5 @@ Resizer.defaultProps = {
 };
 
 exports.default = Resizer;
-
-},{"react":183}],186:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-var Splitter = function Splitter(_ref) {
-  var style = _ref.style,
-      direction = _ref.direction,
-      children = _ref.children,
-      rest = _objectWithoutProperties(_ref, ["style", "direction", "children"]);
-
-  return _react2.default.createElement(
-    "div",
-    _extends({}, rest, { style: _extends({}, style, {
-        display: "flex",
-        alignItems: "stretch",
-        flexDirection: direction })
-    }),
-    children
-  );
-};
-
-Splitter.propTypes = {
-  style: _react.PropTypes.object,
-  children: _react.PropTypes.node,
-  direction: _react.PropTypes.oneOf(["row", "column"])
-};
-
-Splitter.defaultProps = {
-  direction: "row"
-};
-
-exports.default = Splitter;
-
-},{"react":183}],187:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-var Stretchable = function Stretchable(_ref) {
-  var style = _ref.style,
-      children = _ref.children,
-      rest = _objectWithoutProperties(_ref, ["style", "children"]);
-
-  return _react2.default.createElement(
-    "div",
-    _extends({}, rest, { style: _extends({}, style, { flex: 1 }) }),
-    _react.Children.map(children, function (child) {
-      return _react2.default.cloneElement(child, {
-        style: _extends({ height: "100%" }, child.props.style)
-      });
-    })
-  );
-};
-
-Stretchable.propTypes = {
-  style: _react.PropTypes.object,
-  children: _react.PropTypes.node
-};
-
-exports.default = Stretchable;
 
 },{"react":183}]},{},[1]);
