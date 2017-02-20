@@ -14,7 +14,7 @@ render(
       { content }
     </Panel>
 
-    <Panel stretchable direction="column">
+    <Panel stretchable splitDirection="column">
       <Panel resizable style={ panelStyle }>
         { content }
       </Panel>

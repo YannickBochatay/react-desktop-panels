@@ -5,7 +5,7 @@ class Panel extends Component {
 
   renderChildren() {
 
-    const { direction, children } = this.props
+    const { splitDirection, children } = this.props
 
     const childrenArray = Children.toArray(children)
 
@@ -17,7 +17,7 @@ class Panel extends Component {
 
         const props = { }
 
-        if (!child.props.direction) props.direction = direction
+        if (!child.props.splitDirection) props.splitDirection = splitDirection
 
         if (children[i - 1] && children[i - 1].props.resizable) {
           // props.resizable = false
@@ -30,7 +30,7 @@ class Panel extends Component {
       }
       /* else if (i < childrenArray.length - 1) {
 
-        const cssProp = "margin" + (direction === "row" ? "Right" : "Bottom")
+        const cssProp = "margin" + (splitDirection === "row" ? "Right" : "Bottom")
         const style = { ...child.props.style, [cssProp] : 5 }
 
         return React.cloneElement(child, { style })
@@ -43,7 +43,7 @@ class Panel extends Component {
 
   render() {
 
-    const { stretchable, resizable, direction, children, style, defaultSize, ...rest } = this.props
+    const { stretchable, resizable, splitDirection, children, style, defaultSize, ...rest } = this.props
     const childrenArray = Children.toArray(children)
 
     const splitted = childrenArray.some(child => child.type === Panel)
@@ -58,14 +58,14 @@ class Panel extends Component {
         ...fullStyle,
         display : "flex",
         alignItems : "stretch",
-        flexDirection : direction
+        flexDirection : splitDirection
       }
 
     }
 
     if (resizable) {
       return (
-        <Resizable { ...rest } style={ fullStyle } direction={ direction }>
+        <Resizable { ...rest } style={ fullStyle } direction={ splitDirection }>
           { this.renderChildren() }
         </Resizable>
       )
@@ -73,7 +73,7 @@ class Panel extends Component {
     else {
 
       if (defaultSize) {
-        const dimProp = (direction === "column") ? "height" : "width"
+        const dimProp = (splitDirection === "column") ? "height" : "width"
         fullStyle[dimProp] = defaultSize
       }
 
@@ -92,7 +92,7 @@ class Panel extends Component {
 Panel.propTypes = {
   stretchable : PropTypes.bool,
   resizable : PropTypes.bool,
-  direction : PropTypes.oneOf(["row", "column"]),
+  splitDirection : PropTypes.oneOf(["row", "column"]),
   children : PropTypes.node,
   style : PropTypes.object,
   defaultSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number])
