@@ -18,7 +18,7 @@ class Panel extends Component {
 
         const props = { }
 
-        if (!child.props.splitDirection) props.splitDirection = splitDirection
+        props.direction = splitDirection
 
         if (children[i - 1] && children[i - 1].props.resizable) {
           // props.resizable = false
@@ -44,7 +44,7 @@ class Panel extends Component {
 
   render() {
 
-    const { stretchable, resizable, splitDirection, children, style, defaultSize, ...rest } = this.props
+    const { stretchable, resizable, direction, splitDirection, children, style, defaultSize, ...rest } = this.props
     
     const splitted = Children.count(children) > 1
 
@@ -65,7 +65,12 @@ class Panel extends Component {
 
     if (resizable) {
       return (
-        <Resizable { ...rest } style={ fullStyle } direction={ splitDirection }>
+        <Resizable
+          { ...rest }
+          style={ fullStyle }
+          direction={ direction }
+          defaultSize={ defaultSize }
+        >
           { this.renderChildren() }
         </Resizable>
       )
@@ -73,7 +78,7 @@ class Panel extends Component {
     else {
 
       if (defaultSize) {
-        const dimProp = (splitDirection === "column") ? "height" : "width"
+        const dimProp = (direction === "column") ? "height" : "width"
         fullStyle[dimProp] = defaultSize
       }
 
@@ -92,6 +97,7 @@ class Panel extends Component {
 Panel.propTypes = {
   stretchable : PropTypes.bool,
   resizable : PropTypes.bool,
+  direction : PropTypes.oneOf(["row", "column"]),
   splitDirection : PropTypes.oneOf(["row", "column"]),
   children : PropTypes.node,
   style : PropTypes.object,

@@ -38,9 +38,17 @@ class Example extends React.Component {
           resizable
           width={ this.state.width }
           onDrag={ this.handleChangeWidth }
-          style={ panelStyle }
+          splitDirection="column"
         >
-          { content }
+          <Panel resizable style={ panelStyle } defaultSize="33%">
+            { content }
+          </Panel>
+          <Panel resizable style={ panelStyle } defaultSize="33%">
+            { content }
+          </Panel>
+          <Panel stretchable style={ panelStyle }>
+            { content }
+          </Panel>
         </Panel>
 
         <Panel stretchable splitDirection="column">

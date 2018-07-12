@@ -146,6 +146,8 @@ class Resizable extends Component {
     const state = this.isControlled() ? this.props : this.state
     const dim = state[prop]
 
+    // console.log(prop, dim, dim && /%/.test(dim) ? "%" : "px")
+
     this.unit = dim && /%/.test(dim) ? "%" : "px"
   }
 
@@ -154,7 +156,7 @@ class Resizable extends Component {
     const { defaultSize } = this.props
 
     const prop = this.getProp()
-
+    
     if (defaultSize == null) this.setUnit()
     else this.setState({ [prop] : defaultSize }, this.setUnit)
   }

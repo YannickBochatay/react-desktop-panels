@@ -66,9 +66,23 @@ var Example = function (_React$Component) {
             resizable: true,
             width: this.state.width,
             onDrag: this.handleChangeWidth,
-            style: panelStyle
+            splitDirection: "column"
           },
-          content
+          _react2.default.createElement(
+            _Panel2.default,
+            { resizable: true, style: panelStyle, defaultSize: "33%" },
+            content
+          ),
+          _react2.default.createElement(
+            _Panel2.default,
+            { resizable: true, style: panelStyle, defaultSize: "33%" },
+            content
+          ),
+          _react2.default.createElement(
+            _Panel2.default,
+            { stretchable: true, style: panelStyle },
+            content
+          )
         ),
         _react2.default.createElement(
           _Panel2.default,
@@ -21225,7 +21239,7 @@ var Panel = function (_Component) {
 
           var props = {};
 
-          if (!child.props.splitDirection) props.splitDirection = splitDirection;
+          props.direction = splitDirection;
 
           if (children[i - 1] && children[i - 1].props.resizable) {
             // props.resizable = false
@@ -21248,11 +21262,12 @@ var Panel = function (_Component) {
       var _props2 = this.props,
           stretchable = _props2.stretchable,
           resizable = _props2.resizable,
+          direction = _props2.direction,
           splitDirection = _props2.splitDirection,
           children = _props2.children,
           style = _props2.style,
           defaultSize = _props2.defaultSize,
-          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "splitDirection", "children", "style", "defaultSize"]);
+          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "defaultSize"]);
 
       var splitted = _react.Children.count(children) > 1;
 
@@ -21272,13 +21287,17 @@ var Panel = function (_Component) {
       if (resizable) {
         return _react2.default.createElement(
           _Resizable2.default,
-          _extends({}, rest, { style: fullStyle, direction: splitDirection }),
+          _extends({}, rest, {
+            style: fullStyle,
+            direction: direction,
+            defaultSize: defaultSize
+          }),
           this.renderChildren()
         );
       } else {
 
         if (defaultSize) {
-          var dimProp = splitDirection === "column" ? "height" : "width";
+          var dimProp = direction === "column" ? "height" : "width";
           fullStyle[dimProp] = defaultSize;
         }
 
@@ -21297,6 +21316,7 @@ var Panel = function (_Component) {
 Panel.propTypes = {
   stretchable: _propTypes2.default.bool,
   resizable: _propTypes2.default.bool,
+  direction: _propTypes2.default.oneOf(["row", "column"]),
   splitDirection: _propTypes2.default.oneOf(["row", "column"]),
   children: _propTypes2.default.node,
   style: _propTypes2.default.object,
@@ -21509,6 +21529,8 @@ var Resizable = function (_Component) {
       var prop = this.getProp();
       var state = this.isControlled() ? this.props : this.state;
       var dim = state[prop];
+
+      // console.log(prop, dim, dim && /%/.test(dim) ? "%" : "px")
 
       this.unit = dim && /%/.test(dim) ? "%" : "px";
     }
