@@ -40,10 +40,11 @@ class Example extends React.Component {
           onDrag={ this.handleChangeWidth }
           splitDirection="column"
         >
-          <Panel resizable style={ panelStyle } defaultSize="33%">
-            { content }
-          </Panel>
-          <Panel resizable style={ panelStyle } defaultSize="33%">
+          <Panel
+            resizable
+            style={ panelStyle }
+            defaultSize="33%"
+          >
             { content }
           </Panel>
           <Panel stretchable style={ panelStyle }>
@@ -60,20 +61,11 @@ class Example extends React.Component {
           >
             { content }
           </Panel>
-          <Panel stretchable>
-            <Panel resizable style={ panelStyle }>
-              { content }
-            </Panel>
-            <Panel stretchable style={ panelStyle }>
-              { content }
-            </Panel>
+          <Panel stretchable style={ panelStyle }>
+            { content }
           </Panel>
         </Panel>
-
-        <Panel resizable defaultSize="20%" style={ panelStyle }>
-          { content }
-        </Panel>
-
+        
       </Panel>
     )
   }

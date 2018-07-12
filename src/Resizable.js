@@ -67,34 +67,27 @@ class Resizable extends Component {
 
     const dim = this.getComputedDim("px")
 
-    const callback = () => {
+    if (!this.isControlled()) this.setState(dim)
 
-      this.widthInit = dim.width
-      this.heightInit = dim.height
+    this.widthInit = dim.width
+    this.heightInit = dim.height
 
-      const prop = this.getProp()
+    const prop = this.getProp()
 
-      if (this.props.onDrag) this.props.onDrag(dim[prop], e)
-      if (this.props.onDragStart) this.props.onDragStart(dim[prop], e)
-    }
-
-    if (this.isControlled()) callback()
-    else this.setState(dim, callback)
+    if (this.props.onDrag) this.props.onDrag(dim[prop], e)
+    if (this.props.onDragStart) this.props.onDragStart(dim[prop], e)
   }
 
   handleDragEnd(e) {
 
     const dim = this.getComputedDim("%")
 
+    if (!this.isControlled()) this.setState(dim)
+
     const prop = this.getProp()
 
-    const callback = () => {
-      if (this.props.onDrag) this.props.onDrag(dim[prop], e)
-      if (this.props.onDragEnd) this.props.onDragStart(dim[prop], e)
-    }
-
-    if (this.isControlled()) callback()
-    else this.setState(dim, callback)
+    if (this.props.onDrag) this.props.onDrag(dim[prop], e)
+    if (this.props.onDragEnd) this.props.onDragStart(dim[prop], e)
   }
 
   handleDrag(e) {
@@ -140,13 +133,16 @@ class Resizable extends Component {
     return ((width != null && direction === "row") || (height != null && direction === "column"))
   }
 
-  setUnit() {
+  setUnit(dimension) {
 
-    const prop = this.getProp()
-    const state = this.isControlled() ? this.props : this.state
-    const dim = state[prop]
+    let dim = dimension
 
-    // console.log(prop, dim, dim && /%/.test(dim) ? "%" : "px")
+    if (!dim) {
+
+      const prop = this.getProp()
+      const state = this.isControlled() ? this.props : this.state
+      dim = state[prop]
+    }
 
     this.unit = dim && /%/.test(dim) ? "%" : "px"
   }
@@ -156,9 +152,12 @@ class Resizable extends Component {
     const { defaultSize } = this.props
 
     const prop = this.getProp()
-    
+
     if (defaultSize == null) this.setUnit()
-    else this.setState({ [prop] : defaultSize }, this.setUnit)
+    else {
+      this.setState({ [prop] : defaultSize })
+      this.setUnit(defaultSize)
+    }
   }
 
   setContainerStyle() {

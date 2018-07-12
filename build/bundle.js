@@ -70,12 +70,11 @@ var Example = function (_React$Component) {
           },
           _react2.default.createElement(
             _Panel2.default,
-            { resizable: true, style: panelStyle, defaultSize: "33%" },
-            content
-          ),
-          _react2.default.createElement(
-            _Panel2.default,
-            { resizable: true, style: panelStyle, defaultSize: "33%" },
+            {
+              resizable: true,
+              style: panelStyle,
+              defaultSize: "33%"
+            },
             content
           ),
           _react2.default.createElement(
@@ -99,23 +98,9 @@ var Example = function (_React$Component) {
           ),
           _react2.default.createElement(
             _Panel2.default,
-            { stretchable: true },
-            _react2.default.createElement(
-              _Panel2.default,
-              { resizable: true, style: panelStyle },
-              content
-            ),
-            _react2.default.createElement(
-              _Panel2.default,
-              { stretchable: true, style: panelStyle },
-              content
-            )
+            { stretchable: true, style: panelStyle },
+            content
           )
-        ),
-        _react2.default.createElement(
-          _Panel2.default,
-          { resizable: true, defaultSize: "20%", style: panelStyle },
-          content
         )
       );
     }
@@ -21433,41 +21418,34 @@ var Resizable = function (_Component) {
   }, {
     key: "handleDragStart",
     value: function handleDragStart(e) {
-      var _this2 = this;
 
       this.xClick = e.pageX;
       this.yClick = e.pageY;
 
       var dim = this.getComputedDim("px");
 
-      var callback = function callback() {
+      if (!this.isControlled()) this.setState(dim);
 
-        _this2.widthInit = dim.width;
-        _this2.heightInit = dim.height;
+      this.widthInit = dim.width;
+      this.heightInit = dim.height;
 
-        var prop = _this2.getProp();
+      var prop = this.getProp();
 
-        if (_this2.props.onDrag) _this2.props.onDrag(dim[prop], e);
-        if (_this2.props.onDragStart) _this2.props.onDragStart(dim[prop], e);
-      };
-
-      if (this.isControlled()) callback();else this.setState(dim, callback);
+      if (this.props.onDrag) this.props.onDrag(dim[prop], e);
+      if (this.props.onDragStart) this.props.onDragStart(dim[prop], e);
     }
   }, {
     key: "handleDragEnd",
     value: function handleDragEnd(e) {
-      var _this3 = this;
 
       var dim = this.getComputedDim("%");
 
+      if (!this.isControlled()) this.setState(dim);
+
       var prop = this.getProp();
 
-      var callback = function callback() {
-        if (_this3.props.onDrag) _this3.props.onDrag(dim[prop], e);
-        if (_this3.props.onDragEnd) _this3.props.onDragStart(dim[prop], e);
-      };
-
-      if (this.isControlled()) callback();else this.setState(dim, callback);
+      if (this.props.onDrag) this.props.onDrag(dim[prop], e);
+      if (this.props.onDragEnd) this.props.onDragStart(dim[prop], e);
     }
   }, {
     key: "handleDrag",
@@ -21524,13 +21502,16 @@ var Resizable = function (_Component) {
     }
   }, {
     key: "setUnit",
-    value: function setUnit() {
+    value: function setUnit(dimension) {
 
-      var prop = this.getProp();
-      var state = this.isControlled() ? this.props : this.state;
-      var dim = state[prop];
+      var dim = dimension;
 
-      // console.log(prop, dim, dim && /%/.test(dim) ? "%" : "px")
+      if (!dim) {
+
+        var prop = this.getProp();
+        var state = this.isControlled() ? this.props : this.state;
+        dim = state[prop];
+      }
 
       this.unit = dim && /%/.test(dim) ? "%" : "px";
     }
@@ -21542,7 +21523,10 @@ var Resizable = function (_Component) {
 
       var prop = this.getProp();
 
-      if (defaultSize == null) this.setUnit();else this.setState(_defineProperty({}, prop, defaultSize), this.setUnit);
+      if (defaultSize == null) this.setUnit();else {
+        this.setState(_defineProperty({}, prop, defaultSize));
+        this.setUnit(defaultSize);
+      }
     }
   }, {
     key: "setContainerStyle",
@@ -21566,7 +21550,7 @@ var Resizable = function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this2 = this;
 
       var _props3 = this.props,
           direction = _props3.direction,
@@ -21595,7 +21579,7 @@ var Resizable = function (_Component) {
       return _react2.default.createElement(
         "div",
         { style: this.setContainerStyle(), ref: function ref(node) {
-            return _this4.node = node;
+            return _this2.node = node;
           } },
         resizerPos === "before" ? resizer : content,
         resizerPos === "before" ? content : resizer
