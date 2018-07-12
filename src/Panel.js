@@ -45,9 +45,8 @@ class Panel extends Component {
   render() {
 
     const { stretchable, resizable, splitDirection, children, style, defaultSize, ...rest } = this.props
-    const childrenArray = Children.toArray(children)
-
-    const splitted = childrenArray.some(child => child.type === Panel)
+    
+    const splitted = Children.count(children) > 1
 
     let fullStyle = { ...style }
 

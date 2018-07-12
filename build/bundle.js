@@ -45,13 +45,13 @@ var Example = function (_React$Component) {
 
   _createClass(Example, [{
     key: "handleChangeWidth",
-    value: function handleChangeWidth(dim) {
-      this.setState({ width: dim.width });
+    value: function handleChangeWidth(width) {
+      this.setState({ width: width });
     }
   }, {
     key: "handleChangeHeight",
-    value: function handleChangeHeight(dim) {
-      this.setState({ height: dim.height });
+    value: function handleChangeHeight(height) {
+      this.setState({ height: height });
     }
   }, {
     key: "render",
@@ -21254,11 +21254,7 @@ var Panel = function (_Component) {
           defaultSize = _props2.defaultSize,
           rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "splitDirection", "children", "style", "defaultSize"]);
 
-      var childrenArray = _react.Children.toArray(children);
-
-      var splitted = childrenArray.some(function (child) {
-        return child.type === Panel;
-      });
+      var splitted = _react.Children.count(children) > 1;
 
       var fullStyle = _extends({}, style);
 
@@ -21389,7 +21385,7 @@ var Resizable = function (_Component) {
           width = _node$getBoundingClie.width,
           height = _node$getBoundingClie.height;
 
-      if (unit === "%" && this.unit == "%") {
+      if (unit === "%" && this.unit === "%") {
 
         var parent = node.parentNode;
         var dimParent = parent.getBoundingClientRect();
@@ -21409,6 +21405,12 @@ var Resizable = function (_Component) {
       return { width: width, height: height };
     }
   }, {
+    key: "getProp",
+    value: function getProp() {
+
+      return this.props.direction === "row" ? "width" : "height";
+    }
+  }, {
     key: "handleDragStart",
     value: function handleDragStart(e) {
       var _this2 = this;
@@ -21423,22 +21425,26 @@ var Resizable = function (_Component) {
         _this2.widthInit = dim.width;
         _this2.heightInit = dim.height;
 
-        if (_this2.props.onDrag) _this2.props.onDrag(dim);
-        if (_this2.props.onDragStart) _this2.props.onDragStart(dim);
+        var prop = _this2.getProp();
+
+        if (_this2.props.onDrag) _this2.props.onDrag(dim[prop]);
+        if (_this2.props.onDragStart) _this2.props.onDragStart(dim[prop]);
       };
 
       if (this.isControlled()) callback();else this.setState(dim, callback);
     }
   }, {
     key: "handleDragEnd",
-    value: function handleDragEnd(e) {
+    value: function handleDragEnd() {
       var _this3 = this;
 
       var dim = this.getComputedDim("%");
 
+      var prop = this.getProp();
+
       var callback = function callback() {
-        if (_this3.props.onDrag) _this3.props.onDrag(dim);
-        if (_this3.props.onDragEnd) _this3.props.onDragStart(dim);
+        if (_this3.props.onDrag) _this3.props.onDrag(dim[prop]);
+        if (_this3.props.onDragEnd) _this3.props.onDragStart(dim[prop]);
       };
 
       if (this.isControlled()) callback();else this.setState(dim, callback);
@@ -21474,7 +21480,7 @@ var Resizable = function (_Component) {
         if (!controlled) this.setState({ height: height });
       }
 
-      if (onDrag) onDrag({ width: width, height: height });
+      if (onDrag) onDrag(this.getProp() === "width" ? width : height);
     }
   }, {
     key: "getOwnDim",
@@ -21488,32 +21494,33 @@ var Resizable = function (_Component) {
   }, {
     key: "isControlled",
     value: function isControlled() {
+      var _props2 = this.props,
+          direction = _props2.direction,
+          width = _props2.width,
+          height = _props2.height;
 
-      return "width" in this.props || "height" in this.props;
+
+      return width != null && direction === "row" || height != null && direction === "column";
     }
   }, {
     key: "setUnit",
     value: function setUnit() {
 
-      var prop = direction === "row" ? "width" : "height";
+      var prop = this.getProp();
       var state = this.isControlled() ? this.props : this.state;
+      var dim = state[prop];
 
-      this.unit = /%/.test(state[prop]) ? "%" : "px";
+      this.unit = dim && /%/.test(dim) ? "%" : "px";
     }
   }, {
     key: "componentWillMount",
     value: function componentWillMount() {
-      var _props2 = this.props,
-          defaultSize = _props2.defaultSize,
-          direction = _props2.direction;
+      var defaultSize = this.props.defaultSize;
 
 
-      var prop = direction === "row" ? "width" : "height";
+      var prop = this.getProp();
 
-      if (defaultSize != null) {
-
-        this.setState(_defineProperty({}, prop, defaultSize));
-      }
+      if (defaultSize == null) this.setUnit();else this.setState(_defineProperty({}, prop, defaultSize), this.setUnit);
     }
   }, {
     key: "setContainerStyle",

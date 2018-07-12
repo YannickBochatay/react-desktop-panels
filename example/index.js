@@ -21,12 +21,12 @@ class Example extends React.Component {
     }
   }
 
-  handleChangeWidth(dim) {
-    this.setState({ width : dim.width })
+  handleChangeWidth(width) {
+    this.setState({ width })
   }
 
-  handleChangeHeight(dim) {
-    this.setState({ height : dim.height })
+  handleChangeHeight(height) {
+    this.setState({ height })
   }
 
   render() {

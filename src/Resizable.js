@@ -34,7 +34,7 @@ class Resizable extends Component {
 
     let { width, height } = node.getBoundingClientRect()
 
-    if (unit === "%" && this.unit == "%") {
+    if (unit === "%" && this.unit === "%") {
 
       const parent = node.parentNode
       const dimParent = parent.getBoundingClientRect()
@@ -55,11 +55,15 @@ class Resizable extends Component {
     return { width, height }
   }
 
+  getProp() {
+
+    return this.props.direction === "row" ? "width" : "height"
+  }
+
   handleDragStart(e) {
 
     this.xClick = e.pageX
     this.yClick = e.pageY
-      
 
     const dim = this.getComputedDim("px")
 
@@ -67,9 +71,11 @@ class Resizable extends Component {
 
       this.widthInit = dim.width
       this.heightInit = dim.height
-      
-      if (this.props.onDrag) this.props.onDrag(dim)
-      if (this.props.onDragStart) this.props.onDragStart(dim)
+
+      const prop = this.getProp()
+
+      if (this.props.onDrag) this.props.onDrag(dim[prop], e)
+      if (this.props.onDragStart) this.props.onDragStart(dim[prop], e)
     }
 
     if (this.isControlled()) callback()
@@ -80,9 +86,11 @@ class Resizable extends Component {
 
     const dim = this.getComputedDim("%")
 
+    const prop = this.getProp()
+
     const callback = () => {
-      if (this.props.onDrag) this.props.onDrag(dim)
-      if (this.props.onDragEnd) this.props.onDragStart(dim)
+      if (this.props.onDrag) this.props.onDrag(dim[prop], e)
+      if (this.props.onDragEnd) this.props.onDragStart(dim[prop], e)
     }
 
     if (this.isControlled()) callback()
@@ -100,7 +108,7 @@ class Resizable extends Component {
     if (direction === "row") {
 
       const deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1)
-      
+
       width = Math.min(maxSize, Math.max(minSize, this.widthInit + deltaX))
 
       if (!controlled) this.setState({ width })
@@ -108,18 +116,18 @@ class Resizable extends Component {
     } else {
 
       const deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1)
-      
+
       height = Math.min(maxSize, Math.max(minSize, this.heightInit + deltaY))
 
       if (!controlled) this.setState({ height })
     }
 
-    if (onDrag) onDrag({ width, height })
+    if (onDrag) onDrag(this.getProp() === "width" ? width : height, e)
 
   }
 
   getOwnDim() {
-    
+
     const { width, height } = this.isControlled() ? this.props : this.state
 
     return { width, height }
@@ -127,27 +135,28 @@ class Resizable extends Component {
 
   isControlled() {
 
-    return ("width" in this.props || "height" in this.props)
+    const { direction, width, height } = this.props
+
+    return ((width != null && direction === "row") || (height != null && direction === "column"))
   }
 
   setUnit() {
 
-    const prop = direction === "row" ? "width" : "height"
+    const prop = this.getProp()
     const state = this.isControlled() ? this.props : this.state
+    const dim = state[prop]
 
-    this.unit = /%/.test(state[prop]) ? "%" : "px"
+    this.unit = dim && /%/.test(dim) ? "%" : "px"
   }
 
   componentWillMount() {
 
-    const { defaultSize, direction } = this.props
+    const { defaultSize } = this.props
 
-    const prop = direction === "row" ? "width" : "height"
+    const prop = this.getProp()
 
-    if (defaultSize != null) {
-
-      this.setState({ [prop] : defaultSize })
-    }
+    if (defaultSize == null) this.setUnit()
+    else this.setState({ [prop] : defaultSize }, this.setUnit)
   }
 
   setContainerStyle() {
