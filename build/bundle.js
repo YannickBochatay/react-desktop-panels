@@ -64,7 +64,7 @@ var Example = function (_React$Component) {
           _Panel2.default,
           {
             resizable: true,
-            width: this.state.width,
+            size: this.state.width,
             onDrag: this.handleChangeWidth,
             splitDirection: "column"
           },
@@ -73,7 +73,7 @@ var Example = function (_React$Component) {
             {
               resizable: true,
               style: panelStyle,
-              defaultSize: "33%"
+              initialSize: "33%"
             },
             content
           ),
@@ -91,7 +91,7 @@ var Example = function (_React$Component) {
             {
               resizable: true,
               style: panelStyle,
-              height: this.state.height,
+              size: this.state.height,
               onDrag: this.handleChangeHeight
             },
             content
@@ -21251,8 +21251,8 @@ var Panel = function (_Component) {
           splitDirection = _props2.splitDirection,
           children = _props2.children,
           style = _props2.style,
-          defaultSize = _props2.defaultSize,
-          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "defaultSize"]);
+          initialSize = _props2.initialSize,
+          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "initialSize"]);
 
       var splitted = _react.Children.count(children) > 1;
 
@@ -21275,15 +21275,15 @@ var Panel = function (_Component) {
           _extends({}, rest, {
             style: fullStyle,
             direction: direction,
-            defaultSize: defaultSize
+            initialSize: initialSize
           }),
           this.renderChildren()
         );
       } else {
 
-        if (defaultSize) {
+        if (initialSize) {
           var dimProp = direction === "column" ? "height" : "width";
-          fullStyle[dimProp] = defaultSize;
+          fullStyle[dimProp] = initialSize;
         }
 
         return _react2.default.createElement(
@@ -21305,7 +21305,7 @@ Panel.propTypes = {
   splitDirection: _propTypes2.default.oneOf(["row", "column"]),
   children: _propTypes2.default.node,
   style: _propTypes2.default.object,
-  defaultSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number])
+  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number])
 };
 
 Panel.defaultProps = {};
@@ -21343,8 +21343,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -21364,15 +21362,11 @@ var Resizable = function (_Component) {
     _this.handleDrag = _this.handleDrag.bind(_this);
     _this.handleDragEnd = _this.handleDragEnd.bind(_this);
 
-    _this.state = {
-      width: null,
-      height: null
-    };
+    _this.state = { size: null };
 
     _this.xClick = null;
     _this.yClick = null;
-    _this.widthInit = null;
-    _this.heightInit = null;
+    _this.sizeInit = null;
 
     return _this;
   }
@@ -21423,29 +21417,28 @@ var Resizable = function (_Component) {
       this.yClick = e.pageY;
 
       var dim = this.getComputedDim("px");
-
-      if (!this.isControlled()) this.setState(dim);
-
-      this.widthInit = dim.width;
-      this.heightInit = dim.height;
-
       var prop = this.getProp();
+      var size = dim[prop];
 
-      if (this.props.onDrag) this.props.onDrag(dim[prop], e);
-      if (this.props.onDragStart) this.props.onDragStart(dim[prop], e);
+      if (!this.isControlled()) this.setState({ size: size });
+
+      this.sizeInit = size;
+
+      if (this.props.onDrag) this.props.onDrag(size, e);
+      if (this.props.onDragStart) this.props.onDragStart(size, e);
     }
   }, {
     key: "handleDragEnd",
     value: function handleDragEnd(e) {
 
       var dim = this.getComputedDim("%");
-
-      if (!this.isControlled()) this.setState(dim);
-
       var prop = this.getProp();
+      var size = dim[prop];
 
-      if (this.props.onDrag) this.props.onDrag(dim[prop], e);
-      if (this.props.onDragEnd) this.props.onDragStart(dim[prop], e);
+      if (!this.isControlled()) this.setState({ size: size });
+
+      if (this.props.onDrag) this.props.onDrag(size, e);
+      if (this.props.onDragEnd) this.props.onDragStart(size, e);
     }
   }, {
     key: "handleDrag",
@@ -21459,73 +21452,59 @@ var Resizable = function (_Component) {
 
       var controlled = this.isControlled();
 
-      var width = this.widthInit;
-      var height = this.heightInit;
+      var size = this.sizeInit;
 
       if (direction === "row") {
 
         var deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1);
 
-        width = Math.min(maxSize, Math.max(minSize, this.widthInit + deltaX));
-
-        if (!controlled) this.setState({ width: width });
+        size = Math.min(maxSize, Math.max(minSize, this.sizeInit + deltaX));
       } else {
 
         var deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1);
 
-        height = Math.min(maxSize, Math.max(minSize, this.heightInit + deltaY));
-
-        if (!controlled) this.setState({ height: height });
+        size = Math.min(maxSize, Math.max(minSize, this.sizeInit + deltaY));
       }
 
-      if (onDrag) onDrag(this.getProp() === "width" ? width : height, e);
+      if (!controlled) this.setState({ size: size });
+
+      if (onDrag) onDrag(size, e);
     }
   }, {
     key: "getOwnDim",
     value: function getOwnDim() {
-      var _ref = this.isControlled() ? this.props : this.state,
-          width = _ref.width,
-          height = _ref.height;
 
-      return { width: width, height: height };
+      var state = this.isControlled() ? this.props : this.state;
+
+      return state.size;
     }
   }, {
     key: "isControlled",
     value: function isControlled() {
       var _props2 = this.props,
-          direction = _props2.direction,
-          width = _props2.width,
-          height = _props2.height;
+          initialSize = _props2.initialSize,
+          size = _props2.size;
 
 
-      return width != null && direction === "row" || height != null && direction === "column";
+      return size != null && initialSize == null;
     }
   }, {
     key: "setUnit",
     value: function setUnit(dimension) {
 
-      var dim = dimension;
-
-      if (!dim) {
-
-        var prop = this.getProp();
-        var state = this.isControlled() ? this.props : this.state;
-        dim = state[prop];
-      }
+      var dim = dimension || this.getOwnDim();
 
       this.unit = dim && /%/.test(dim) ? "%" : "px";
     }
   }, {
     key: "componentWillMount",
     value: function componentWillMount() {
-      var defaultSize = this.props.defaultSize;
+      var initialSize = this.props.initialSize;
 
 
-      var prop = this.getProp();
-
-      if (defaultSize == null) this.setUnit();else {
-        this.setState(_defineProperty({}, prop, defaultSize));
-        this.setUnit(defaultSize);
+      if (initialSize == null) this.setUnit();else {
+        this.setState({ size: initialSize });
+        this.setUnit(initialSize);
       }
     }
   }, {
@@ -21533,9 +21512,8 @@ var Resizable = function (_Component) {
     value: function setContainerStyle() {
       var direction = this.props.direction;
 
-      var _getOwnDim = this.getOwnDim(),
-          width = _getOwnDim.width,
-          height = _getOwnDim.height;
+
+      var size = this.getOwnDim();
 
       var style = {
         display: "flex",
@@ -21543,7 +21521,7 @@ var Resizable = function (_Component) {
         flexDirection: direction
       };
 
-      if (width === null && height === null) style.flex = 1;else if (direction === "row") style.width = width;else style.height = height;
+      if (size === null) style.flex = 1;else if (direction === "row") style.width = size;else style.height = size;
 
       return style;
     }
@@ -21561,7 +21539,8 @@ var Resizable = function (_Component) {
 
       delete rest.minSize;
       delete rest.maxSize;
-      delete rest.defaultSize;
+      delete rest.size;
+      delete rest.initialSize;
 
       var content = _react2.default.createElement(
         "div",
@@ -21598,11 +21577,10 @@ Resizable.propTypes = {
   onDrag: _propTypes2.default.func,
   onDragEnd: _propTypes2.default.func,
   direction: _propTypes2.default.oneOf(["row", "column"]),
-  defaultSize: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
   minSize: _propTypes2.default.number,
   maxSize: _propTypes2.default.number,
-  width: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
-  height: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string])
+  size: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string])
 };
 
 Resizable.defaultProps = {

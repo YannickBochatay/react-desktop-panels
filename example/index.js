@@ -36,14 +36,14 @@ class Example extends React.Component {
 
         <Panel
           resizable
-          width={ this.state.width }
+          size={ this.state.width }
           onDrag={ this.handleChangeWidth }
           splitDirection="column"
         >
           <Panel
             resizable
             style={ panelStyle }
-            defaultSize="33%"
+            initialSize="33%"
           >
             { content }
           </Panel>
@@ -56,7 +56,7 @@ class Example extends React.Component {
           <Panel
             resizable
             style={ panelStyle }
-            height={ this.state.height }
+            size={ this.state.height }
             onDrag={ this.handleChangeHeight }
           >
             { content }
