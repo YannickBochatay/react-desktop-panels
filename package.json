@@ -1,9 +1,10 @@
 {
   "name": "react-desktop-panels",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "desktop panels with react",
   "main": "lib/Panel.js",
   "dependencies": {
+    "prop-types": "^15.6.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   },
