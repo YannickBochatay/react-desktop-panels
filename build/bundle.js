@@ -21252,7 +21252,8 @@ var Panel = function (_Component) {
           children = _props2.children,
           style = _props2.style,
           initialSize = _props2.initialSize,
-          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "initialSize"]);
+          resizerSize = _props2.resizerSize,
+          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "initialSize", "resizerSize"]);
 
       var splitted = _react.Children.count(children) > 1;
 
@@ -21275,7 +21276,8 @@ var Panel = function (_Component) {
           _extends({}, rest, {
             style: fullStyle,
             direction: direction,
-            initialSize: initialSize
+            initialSize: initialSize,
+            resizerSize: resizerSize
           }),
           this.renderChildren()
         );
@@ -21305,7 +21307,11 @@ Panel.propTypes = {
   splitDirection: _propTypes2.default.oneOf(["row", "column"]),
   children: _propTypes2.default.node,
   style: _propTypes2.default.object,
-  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number])
+  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
+  resizerSize: _propTypes2.default.number,
+  onDrag: _propTypes2.default.func,
+  onDragStart: _propTypes2.default.func,
+  onDragEnd: _propTypes2.default.func
 };
 
 Panel.defaultProps = {};
@@ -21534,8 +21540,9 @@ var Resizable = function (_Component) {
           direction = _props3.direction,
           children = _props3.children,
           resizerPos = _props3.resizerPos,
+          resizerSize = _props3.resizerSize,
           style = _props3.style,
-          rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos", "style"]);
+          rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos", "resizerSize", "style"]);
 
       delete rest.minSize;
       delete rest.maxSize;
@@ -21552,7 +21559,8 @@ var Resizable = function (_Component) {
         direction: direction,
         onDragStart: this.handleDragStart,
         onDrag: this.handleDrag,
-        onDragEnd: this.handleDragEnd
+        onDragEnd: this.handleDragEnd,
+        size: resizerSize
       });
 
       return _react2.default.createElement(
@@ -21573,6 +21581,7 @@ Resizable.propTypes = {
   children: _propTypes2.default.node,
   style: _propTypes2.default.object,
   resizerPos: _propTypes2.default.oneOf(["before", "after"]),
+  resizerSize: _propTypes2.default.number,
   onDragStart: _propTypes2.default.func,
   onDrag: _propTypes2.default.func,
   onDragEnd: _propTypes2.default.func,
@@ -21666,13 +21675,14 @@ var Resizer = function (_Component) {
       var _props = this.props,
           direction = _props.direction,
           style = _props.style,
-          rest = _objectWithoutProperties(_props, ["direction", "style"]);
+          size = _props.size,
+          rest = _objectWithoutProperties(_props, ["direction", "style", "size"]);
 
       var vertical = direction === "row";
 
       var baseStyle = {
-        width: vertical ? 5 : "100%",
-        height: vertical ? "100%" : 5,
+        width: vertical ? size : "100%",
+        height: vertical ? "100%" : size,
         display: "inline-block",
         cursor: vertical ? "ew-resize" : "ns-resize"
       };
@@ -21695,11 +21705,13 @@ Resizer.propTypes = {
   onDrag: _propTypes2.default.func,
   onDragEnd: _propTypes2.default.func,
   style: _propTypes2.default.object,
-  direction: _propTypes2.default.oneOf(["row", "column"])
+  direction: _propTypes2.default.oneOf(["row", "column"]),
+  size: _propTypes2.default.number
 };
 
 Resizer.defaultProps = {
-  direction: "row"
+  direction: "row",
+  size: 5
 };
 
 exports.default = Resizer;

@@ -44,8 +44,18 @@ class Panel extends Component {
 
   render() {
 
-    const { stretchable, resizable, direction, splitDirection, children, style, initialSize, ...rest } = this.props
-    
+    const {
+      stretchable,
+      resizable,
+      direction,
+      splitDirection,
+      children,
+      style,
+      initialSize,
+      resizerSize,
+      ...rest
+    } = this.props
+
     const splitted = Children.count(children) > 1
 
     let fullStyle = { ...style }
@@ -70,6 +80,7 @@ class Panel extends Component {
           style={ fullStyle }
           direction={ direction }
           initialSize={ initialSize }
+          resizerSize={ resizerSize }
         >
           { this.renderChildren() }
         </Resizable>
@@ -101,7 +112,11 @@ Panel.propTypes = {
   splitDirection : PropTypes.oneOf(["row", "column"]),
   children : PropTypes.node,
   style : PropTypes.object,
-  initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  resizerSize : PropTypes.number,
+  onDrag : PropTypes.func,
+  onDragStart : PropTypes.func,
+  onDragEnd : PropTypes.func
 }
 
 Panel.defaultProps = {}

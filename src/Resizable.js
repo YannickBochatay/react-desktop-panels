@@ -164,7 +164,7 @@ class Resizable extends Component {
 
   render() {
 
-    const { direction, children, resizerPos, style, ...rest } = this.props
+    const { direction, children, resizerPos, resizerSize, style, ...rest } = this.props
 
     delete rest.minSize
     delete rest.maxSize
@@ -183,6 +183,7 @@ class Resizable extends Component {
         onDragStart={ this.handleDragStart }
         onDrag={ this.handleDrag }
         onDragEnd={ this.handleDragEnd }
+        size={ resizerSize }
       />
     )
 
@@ -200,6 +201,7 @@ Resizable.propTypes = {
   children : PropTypes.node,
   style : PropTypes.object,
   resizerPos : PropTypes.oneOf(["before", "after"]),
+  resizerSize : PropTypes.number,
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,

@@ -37,13 +37,13 @@ class Resizer extends Component {
 
   render() {
 
-    const { direction, style, ...rest } = this.props
+    const { direction, style, size, ...rest } = this.props
 
     const vertical = (direction === "row")
 
     const baseStyle = {
-      width : vertical ? 5 : "100%",
-      height : vertical ? "100%" : 5,
+      width : vertical ? size : "100%",
+      height : vertical ? "100%" : size,
       display : "inline-block",
       cursor : vertical ? "ew-resize" : "ns-resize"
     }
@@ -66,11 +66,13 @@ Resizer.propTypes = {
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
   style : PropTypes.object,
-  direction : PropTypes.oneOf(["row", "column"])
+  direction : PropTypes.oneOf(["row", "column"]),
+  size : PropTypes.number
 }
 
 Resizer.defaultProps = {
-  direction : "row"
+  direction : "row",
+  size : 5
 }
 
 export default Resizer
