@@ -21444,7 +21444,7 @@ var Resizable = function (_Component) {
       if (!this.isControlled()) this.setState({ size: size });
 
       if (this.props.onDrag) this.props.onDrag(size, e);
-      if (this.props.onDragEnd) this.props.onDragStart(size, e);
+      if (this.props.onDragEnd) this.props.onDragEnd(size, e);
     }
   }, {
     key: "handleDrag",
