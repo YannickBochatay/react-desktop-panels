@@ -33436,9 +33436,10 @@ var Panel = function (_Component) {
           splitDirection = _props2.splitDirection,
           children = _props2.children,
           style = _props2.style,
+          size = _props2.size,
           initialSize = _props2.initialSize,
           resizerSize = _props2.resizerSize,
-          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "initialSize", "resizerSize"]);
+          rest = _objectWithoutProperties(_props2, ["stretchable", "resizable", "direction", "splitDirection", "children", "style", "size", "initialSize", "resizerSize"]);
 
       var splitted = _react.Children.count(children) > 1;
 
@@ -33461,6 +33462,7 @@ var Panel = function (_Component) {
           _extends({}, rest, {
             style: fullStyle,
             direction: direction,
+            size: size,
             initialSize: initialSize,
             resizerSize: resizerSize
           }),
@@ -33468,9 +33470,14 @@ var Panel = function (_Component) {
         );
       } else {
 
-        if (initialSize) {
+        delete rest.minSize;
+        delete rest.maxSize;
+        delete rest.resizerPos;
+        delete rest.resizerSize;
+
+        if (initialSize || size) {
           var dimProp = direction === "column" ? "height" : "width";
-          fullStyle[dimProp] = initialSize;
+          fullStyle[dimProp] = initialSize || size;
         }
 
         return _react2.default.createElement(
@@ -33492,6 +33499,7 @@ Panel.propTypes = {
   splitDirection: _propTypes2.default.oneOf(["row", "column"]),
   children: _propTypes2.default.node,
   style: _propTypes2.default.object,
+  size: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
   initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
   resizerSize: _propTypes2.default.number,
   onDrag: _propTypes2.default.func,

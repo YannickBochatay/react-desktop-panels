@@ -51,6 +51,7 @@ class Panel extends Component {
       splitDirection,
       children,
       style,
+      size,
       initialSize,
       resizerSize,
       ...rest
@@ -79,6 +80,7 @@ class Panel extends Component {
           { ...rest }
           style={ fullStyle }
           direction={ direction }
+          size={ size }
           initialSize={ initialSize }
           resizerSize={ resizerSize }
         >
@@ -88,9 +90,14 @@ class Panel extends Component {
     }
     else {
 
-      if (initialSize) {
+      delete rest.minSize
+      delete rest.maxSize
+      delete rest.resizerPos
+      delete rest.resizerSize
+
+      if (initialSize || size) {
         const dimProp = (direction === "column") ? "height" : "width"
-        fullStyle[dimProp] = initialSize
+        fullStyle[dimProp] = initialSize || size
       }
 
       return (
@@ -112,6 +119,7 @@ Panel.propTypes = {
   splitDirection : PropTypes.oneOf(["row", "column"]),
   children : PropTypes.node,
   style : PropTypes.object,
+  size : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   resizerSize : PropTypes.number,
   onDrag : PropTypes.func,
