@@ -14,12 +14,11 @@ class Resizable extends Component {
     this.handleDrag = this.handleDrag.bind(this)
     this.handleDragEnd = this.handleDragEnd.bind(this)
 
-    this.state = { size : null }
-
     this.xClick = null
     this.yClick = null
     this.sizeInit = null
 
+    this.state = { size : this.props.initialSize }
   }
 
   getComputedDim(unit = "px") {
@@ -132,17 +131,6 @@ class Resizable extends Component {
     this.unit = dim && /%/.test(dim) ? "%" : "px"
   }
 
-  componentWillMount() {
-
-    const { initialSize } = this.props
-
-    if (initialSize == null) this.setUnit()
-    else {
-      this.setState({ size : initialSize })
-      this.setUnit(initialSize)
-    }
-  }
-
   setContainerStyle() {
 
     const { direction } = this.props
@@ -162,9 +150,13 @@ class Resizable extends Component {
     return style
   }
 
+  componentDidMount() {
+    this.setUnit(this.props.initialSize)
+  }
+
   render() {
 
-    const { direction, children, resizerPos, resizerSize, style, ...rest } = this.props
+    const { direction, children, resizerPos, resizerSize, resizerStyle, style, ...rest } = this.props
 
     delete rest.minSize
     delete rest.maxSize
@@ -184,6 +176,7 @@ class Resizable extends Component {
         onDrag={ this.handleDrag }
         onDragEnd={ this.handleDragEnd }
         size={ resizerSize }
+        style={ resizerStyle }
       />
     )
 
@@ -202,6 +195,7 @@ Resizable.propTypes = {
   style : PropTypes.object,
   resizerPos : PropTypes.oneOf(["before", "after"]),
   resizerSize : PropTypes.number,
+  resizerStyle : PropTypes.object,
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
