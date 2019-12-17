@@ -1,6 +1,6 @@
 {
   "name": "react-desktop-panels",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "desktop panels with react",
   "main": "lib/Panel.js",
   "dependencies": {
@@ -32,7 +32,8 @@
   },
   "keywords": [
     "react",
-    "menu",
+    "panel",
+    "resizable",
     "javascript"
   ],
   "author": "Yannick Bochatay",
