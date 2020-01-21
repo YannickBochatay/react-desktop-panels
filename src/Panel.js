@@ -94,6 +94,9 @@ class Panel extends Component {
       delete rest.maxSize
       delete rest.resizerPos
       delete rest.resizerSize
+      delete rest.onDrag
+      delete rest.onDragStart
+      delete rest.onDragEnd
 
       if (initialSize || size) {
         const dimProp = (direction === "column") ? "height" : "width"
