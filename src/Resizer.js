@@ -1,6 +1,27 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
+const Renderer = ({ direction, size, style, ...rest }) => {
+
+  const vertical = (direction === "row")
+
+  const fullStyle = {
+    width : vertical ? size : "100%",
+    height : vertical ? "100%" : size,
+    display : "inline-block",
+    cursor : vertical ? "col-resize" : "row-resize",
+    ...style
+  }
+
+  return <span style={ fullStyle } { ...rest }/>
+}
+
+Renderer.propTypes = {
+  direction : PropTypes.oneOf(["row", "column"]),
+  size : PropTypes.number,
+  style : PropTypes.object
+}
+
 class Resizer extends Component {
 
   constructor(props) {
@@ -37,27 +58,17 @@ class Resizer extends Component {
 
   render() {
 
-    const { direction, style, size, ...rest } = this.props
+    const { renderer, ...rest } = this.props
 
-    const vertical = (direction === "row")
+    delete rest.onDragStart
+    delete rest.onDrag
+    delete rest.onDragEnd
 
-    const baseStyle = {
-      width : vertical ? size : "100%",
-      height : vertical ? "100%" : size,
-      display : "inline-block",
-      cursor : vertical ? "ew-resize" : "ns-resize"
-    }
-
-
-    return (
-      <span
-        { ...rest }
-        style={ { ...baseStyle, ...style } }
-        onMouseDown={ this.handleMouseDown }
-        ref={ node => this.node = node }
-      />
-    )
-
+    return React.createElement(renderer, {
+      ...rest,
+      onMouseDown : this.handleMouseDown,
+      ref : node => this.node = node
+    })
   }
 }
 
@@ -67,12 +78,14 @@ Resizer.propTypes = {
   onDragEnd : PropTypes.func,
   style : PropTypes.object,
   direction : PropTypes.oneOf(["row", "column"]),
-  size : PropTypes.number
+  size : PropTypes.number,
+  renderer : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])
 }
 
 Resizer.defaultProps = {
   direction : "row",
-  size : 5
+  size : 5,
+  renderer : Renderer
 }
 
 export default Resizer

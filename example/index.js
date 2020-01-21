@@ -1,10 +1,36 @@
 import React from "react"
+import PropTypes from "prop-types"
 import { render } from "react-dom"
 import Panel from "../src/Panel"
 
 const content = "Hello world"
 
 const panelStyle = { padding : 10, border : "1px solid #ddd" }
+
+const CustomResizer = ({ ...props }) => {
+
+  delete props.size
+  delete props.direction
+
+  return (
+    <div style={ { display : "flex", justifyContent : "center" } }>
+      <div
+        style={ {
+          width : 20,
+          height : 10,
+          cursor : "row-resize",
+          backgroundColor : "red"
+        } }
+        { ...props }
+      />
+    </div>
+  )
+}
+
+CustomResizer.propTypes = {
+  direction : PropTypes.oneOf(["row", "column"]),
+  size : PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+}
 
 class Example extends React.Component {
 
@@ -38,12 +64,21 @@ class Example extends React.Component {
           resizable
           size={ this.state.width }
           onDrag={ this.handleChangeWidth }
+          minSize={ 100 }
+          maxSize={ 700 }
+          resizerSize={ 5 }
+          resizerStyle={ {
+            backgroundImage : `repeating-linear-gradient(
+              -25deg, #fff, #fff 20px, #df5646 20px, #df5646 40px, #fff 40px, #fff 60px, #1c78a4 60px, #1c78a4 80px
+            )`
+          } }
           splitDirection="column"
         >
           <Panel
             resizable
             style={ panelStyle }
             initialSize="33%"
+            resizerRenderer={ CustomResizer }
           >
             { content }
           </Panel>
@@ -65,7 +100,7 @@ class Example extends React.Component {
             { content }
           </Panel>
         </Panel>
-        
+
       </Panel>
     )
   }

@@ -53,7 +53,6 @@ class Panel extends Component {
       style,
       size,
       initialSize,
-      resizerSize,
       ...rest
     } = this.props
 
@@ -82,7 +81,6 @@ class Panel extends Component {
           direction={ direction }
           size={ size }
           initialSize={ initialSize }
-          resizerSize={ resizerSize }
         >
           { this.renderChildren() }
         </Resizable>
@@ -94,6 +92,8 @@ class Panel extends Component {
       delete rest.maxSize
       delete rest.resizerPos
       delete rest.resizerSize
+      delete rest.resizerStyle
+      delete rest.resizerRenderer
       delete rest.onDrag
       delete rest.onDragStart
       delete rest.onDragEnd
@@ -120,14 +120,22 @@ Panel.propTypes = {
   resizable : PropTypes.bool,
   direction : PropTypes.oneOf(["row", "column"]),
   splitDirection : PropTypes.oneOf(["row", "column"]),
-  children : PropTypes.node,
-  style : PropTypes.object,
+  minSize : PropTypes.number,
+  maxSize : PropTypes.number,
+
+  resizerSize : PropTypes.number, // customize size
+  resizerStyle : PropTypes.object, // customize style
+  resizerRenderer : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]), // rewrite renderer
+
   size : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  resizerSize : PropTypes.number,
+
   onDrag : PropTypes.func,
   onDragStart : PropTypes.func,
-  onDragEnd : PropTypes.func
+  onDragEnd : PropTypes.func,
+
+  children : PropTypes.node,
+  style : PropTypes.object
 }
 
 Panel.defaultProps = {}

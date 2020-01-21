@@ -156,12 +156,17 @@ class Resizable extends Component {
 
   render() {
 
-    const { direction, children, resizerPos, resizerSize, resizerStyle, style, ...rest } = this.props
+    const { direction, children, resizerPos, resizerSize, resizerStyle, resizerRenderer, style, ...rest } = this.props
 
     delete rest.minSize
     delete rest.maxSize
     delete rest.size
     delete rest.initialSize
+    delete rest.minSize
+    delete rest.maxSize
+    delete rest.onDragStart
+    delete rest.onDrag
+    delete rest.onDragEnd
 
     const content = (
       <div { ...rest } style={ { flex : 1, ...style } } >
@@ -169,16 +174,18 @@ class Resizable extends Component {
       </div>
     )
 
-    const resizer = (
-      <Resizer
-        direction={ direction }
-        onDragStart={ this.handleDragStart }
-        onDrag={ this.handleDrag }
-        onDragEnd={ this.handleDragEnd }
-        size={ resizerSize }
-        style={ resizerStyle }
-      />
-    )
+    const resizerProps = {
+      direction,
+      onDragStart : this.handleDragStart,
+      onDrag : this.handleDrag,
+      onDragEnd : this.handleDragEnd
+    }
+
+    if (resizerSize) resizerProps.size = resizerSize
+    if (resizerStyle) resizerProps.style = resizerStyle
+    if (resizerRenderer) resizerProps.renderer = resizerRenderer
+
+    const resizer = <Resizer { ...resizerProps }/>
 
     return (
       <div style={ this.setContainerStyle() } ref={ node => this.node = node }>
@@ -196,6 +203,7 @@ Resizable.propTypes = {
   resizerPos : PropTypes.oneOf(["before", "after"]),
   resizerSize : PropTypes.number,
   resizerStyle : PropTypes.object,
+  resizerRenderer : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
@@ -209,8 +217,8 @@ Resizable.propTypes = {
 Resizable.defaultProps = {
   direction : "row",
   resizerPos : "after",
-  minSize : 80,
-  maxSize : 2000
+  minSize : 0,
+  maxSize : Infinity
 }
 
 
