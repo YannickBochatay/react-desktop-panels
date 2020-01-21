@@ -98,8 +98,9 @@ var Example = function (_React$Component) {
           {
             resizable: true,
             size: this.state.width,
-            onDrag: this.handleChangeWidth,
-            minSize: 100,
+            onResized: this.handleChangeWidth // semi-controlled
+            // onDrag={ this.handleChangeWidth } // controlled
+            , minSize: 100,
             maxSize: 700,
             resizerSize: 5,
             resizerStyle: {
@@ -115,7 +116,8 @@ var Example = function (_React$Component) {
               initialSize: "33%",
               resizerRenderer: CustomResizer
             },
-            content
+            "width : ",
+            this.state.width
           ),
           _react2.default.createElement(
             _Panel2.default,
@@ -33496,14 +33498,18 @@ var Panel = function (_Component) {
       }
 
       if (resizable) {
+
+        var resizableProps = _extends({}, rest, {
+          style: fullStyle,
+          direction: direction
+        });
+
+        if (size != null) resizableProps.size = size;
+        if (initialSize != null) resizableProps.initialSize = initialSize;
+
         return _react2.default.createElement(
           _Resizable2.default,
-          _extends({}, rest, {
-            style: fullStyle,
-            direction: direction,
-            size: size,
-            initialSize: initialSize
-          }),
+          resizableProps,
           this.renderChildren()
         );
       } else {
@@ -33517,6 +33523,7 @@ var Panel = function (_Component) {
         delete rest.onDrag;
         delete rest.onDragStart;
         delete rest.onDragEnd;
+        delete rest.onResized;
 
         if (initialSize || size) {
           var dimProp = direction === "column" ? "height" : "width";
@@ -33547,12 +33554,13 @@ Panel.propTypes = {
   resizerStyle: _propTypes2.default.object, // customize style
   resizerRenderer: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func, _propTypes2.default.string]), // rewrite renderer
 
-  size: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
-  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
+  size: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]), // controlled
+  initialSize: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]), // uncontrolled
 
-  onDrag: _propTypes2.default.func,
+  onDrag: _propTypes2.default.func, // required if controlled
   onDragStart: _propTypes2.default.func,
   onDragEnd: _propTypes2.default.func,
+  onResized: _propTypes2.default.func, // required if semi-controlled (state during redimension, prop when mouse released)
 
   children: _propTypes2.default.node,
   style: _propTypes2.default.object
@@ -33616,7 +33624,7 @@ var Resizable = function (_Component) {
     _this.yClick = null;
     _this.sizeInit = null;
 
-    _this.state = { size: _this.props.initialSize };
+    _this.state = { size: _this.props.initialSize || _this.props.size };
     return _this;
   }
 
@@ -33679,25 +33687,35 @@ var Resizable = function (_Component) {
   }, {
     key: "handleDragEnd",
     value: function handleDragEnd(e) {
+      var _props = this.props,
+          onDrag = _props.onDrag,
+          onDragEnd = _props.onDragEnd,
+          onResized = _props.onResized;
+
 
       var dim = this.getComputedDim("%");
       var prop = this.getProp();
       var size = dim[prop];
+      var isControlled = this.isControlled();
 
-      if (!this.isControlled()) this.setState({ size: size });
+      if (!isControlled) {
+        this.setState({ size: size });
+        this.sizeInit = null;
+      }
 
-      if (this.props.onDrag) this.props.onDrag(size, e);
-      if (this.props.onDragEnd) this.props.onDragEnd(size, e);
+      if (onDrag) onDrag(size, e);
+      if (onDragEnd) onDragEnd(size, e);
+      if (onResized) onResized(size, e);
     }
   }, {
     key: "handleDrag",
     value: function handleDrag(e) {
-      var _props = this.props,
-          direction = _props.direction,
-          resizerPos = _props.resizerPos,
-          minSize = _props.minSize,
-          maxSize = _props.maxSize,
-          onDrag = _props.onDrag;
+      var _props2 = this.props,
+          direction = _props2.direction,
+          resizerPos = _props2.resizerPos,
+          minSize = _props2.minSize,
+          maxSize = _props2.maxSize,
+          onDrag = _props2.onDrag;
 
       var controlled = this.isControlled();
 
@@ -33723,19 +33741,32 @@ var Resizable = function (_Component) {
     key: "getOwnDim",
     value: function getOwnDim() {
 
-      var state = this.isControlled() ? this.props : this.state;
+      var useProps = this.isControlled() || this.isSemiControlled() && this.sizeInit == null;
 
-      return state.size;
+      return this[useProps ? "props" : "state"].size;
     }
   }, {
     key: "isControlled",
     value: function isControlled() {
-      var _props2 = this.props,
-          initialSize = _props2.initialSize,
-          size = _props2.size;
+      var _props3 = this.props,
+          size = _props3.size,
+          initialSize = _props3.initialSize,
+          onDrag = _props3.onDrag;
 
 
-      return size != null && initialSize == null;
+      return initialSize == null && size != null && onDrag != null;
+    }
+  }, {
+    key: "isSemiControlled",
+    value: function isSemiControlled() {
+      var _props4 = this.props,
+          size = _props4.size,
+          initialSize = _props4.initialSize,
+          onResized = _props4.onResized,
+          onDrag = _props4.onDrag;
+
+
+      return initialSize == null && size != null && onResized != null && onDrag == null;
     }
   }, {
     key: "setUnit",
@@ -33773,15 +33804,15 @@ var Resizable = function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props3 = this.props,
-          direction = _props3.direction,
-          children = _props3.children,
-          resizerPos = _props3.resizerPos,
-          resizerSize = _props3.resizerSize,
-          resizerStyle = _props3.resizerStyle,
-          resizerRenderer = _props3.resizerRenderer,
-          style = _props3.style,
-          rest = _objectWithoutProperties(_props3, ["direction", "children", "resizerPos", "resizerSize", "resizerStyle", "resizerRenderer", "style"]);
+      var _props5 = this.props,
+          direction = _props5.direction,
+          children = _props5.children,
+          resizerPos = _props5.resizerPos,
+          resizerSize = _props5.resizerSize,
+          resizerStyle = _props5.resizerStyle,
+          resizerRenderer = _props5.resizerRenderer,
+          style = _props5.style,
+          rest = _objectWithoutProperties(_props5, ["direction", "children", "resizerPos", "resizerSize", "resizerStyle", "resizerRenderer", "style"]);
 
       delete rest.minSize;
       delete rest.maxSize;
@@ -33836,6 +33867,7 @@ Resizable.propTypes = {
   onDragStart: _propTypes2.default.func,
   onDrag: _propTypes2.default.func,
   onDragEnd: _propTypes2.default.func,
+  onResized: _propTypes2.default.func,
   direction: _propTypes2.default.oneOf(["row", "column"]),
   initialSize: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
   minSize: _propTypes2.default.number,

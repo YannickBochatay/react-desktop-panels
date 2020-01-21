@@ -63,7 +63,8 @@ class Example extends React.Component {
         <Panel
           resizable
           size={ this.state.width }
-          onDrag={ this.handleChangeWidth }
+          onResized={ this.handleChangeWidth } // semi-controlled
+          // onDrag={ this.handleChangeWidth } // controlled
           minSize={ 100 }
           maxSize={ 700 }
           resizerSize={ 5 }
@@ -80,7 +81,7 @@ class Example extends React.Component {
             initialSize="33%"
             resizerRenderer={ CustomResizer }
           >
-            { content }
+            width : { this.state.width }
           </Panel>
           <Panel stretchable style={ panelStyle }>
             { content }

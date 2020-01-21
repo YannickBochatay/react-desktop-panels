@@ -74,14 +74,18 @@ class Panel extends Component {
     }
 
     if (resizable) {
+
+      const resizableProps = {
+        ...rest,
+        style : fullStyle,
+        direction
+      }
+
+      if (size != null) resizableProps.size = size
+      if (initialSize != null) resizableProps.initialSize = initialSize
+
       return (
-        <Resizable
-          { ...rest }
-          style={ fullStyle }
-          direction={ direction }
-          size={ size }
-          initialSize={ initialSize }
-        >
+        <Resizable { ...resizableProps }>
           { this.renderChildren() }
         </Resizable>
       )
@@ -97,6 +101,7 @@ class Panel extends Component {
       delete rest.onDrag
       delete rest.onDragStart
       delete rest.onDragEnd
+      delete rest.onResized
 
       if (initialSize || size) {
         const dimProp = (direction === "column") ? "height" : "width"
@@ -127,12 +132,13 @@ Panel.propTypes = {
   resizerStyle : PropTypes.object, // customize style
   resizerRenderer : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]), // rewrite renderer
 
-  size : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  size : PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // controlled
+  initialSize : PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // uncontrolled
 
-  onDrag : PropTypes.func,
+  onDrag : PropTypes.func, // required if controlled
   onDragStart : PropTypes.func,
   onDragEnd : PropTypes.func,
+  onResized : PropTypes.func, // required if semi-controlled (state during redimension, prop when mouse released)
 
   children : PropTypes.node,
   style : PropTypes.object

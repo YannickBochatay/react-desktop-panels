@@ -18,7 +18,7 @@ class Resizable extends Component {
     this.yClick = null
     this.sizeInit = null
 
-    this.state = { size : this.props.initialSize }
+    this.state = { size : this.props.initialSize || this.props.size }
   }
 
   getComputedDim(unit = "px") {
@@ -74,14 +74,21 @@ class Resizable extends Component {
 
   handleDragEnd(e) {
 
+    const { onDrag, onDragEnd, onResized } = this.props
+
     const dim = this.getComputedDim("%")
     const prop = this.getProp()
     const size = dim[prop]
+    const isControlled = this.isControlled()
 
-    if (!this.isControlled()) this.setState({ size })
+    if (!isControlled) {
+      this.setState({ size })
+      this.sizeInit = null
+    }
 
-    if (this.props.onDrag) this.props.onDrag(size, e)
-    if (this.props.onDragEnd) this.props.onDragEnd(size, e)
+    if (onDrag) onDrag(size, e)
+    if (onDragEnd) onDragEnd(size, e)
+    if (onResized) onResized(size, e)
   }
 
   handleDrag(e) {
@@ -112,16 +119,23 @@ class Resizable extends Component {
 
   getOwnDim() {
 
-    const state = this.isControlled() ? this.props : this.state
+    const useProps = this.isControlled() || (this.isSemiControlled() && this.sizeInit == null)
 
-    return state.size
+    return this[useProps ? "props" : "state"].size
   }
 
   isControlled() {
 
-    const { initialSize, size } = this.props
+    const { size, initialSize, onDrag } = this.props
 
-    return size != null && initialSize == null
+    return initialSize == null && size != null && onDrag != null
+  }
+
+  isSemiControlled() {
+
+    const { size, initialSize, onResized, onDrag } = this.props
+
+    return initialSize == null && size != null && onResized != null && onDrag == null
   }
 
   setUnit(dimension) {
@@ -207,6 +221,7 @@ Resizable.propTypes = {
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
   onDragEnd : PropTypes.func,
+  onResized : PropTypes.func,
   direction : PropTypes.oneOf(["row", "column"]),
   initialSize : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   minSize : PropTypes.number,
