@@ -66,8 +66,7 @@ class Resizer extends Component {
 
     return React.createElement(renderer, {
       ...rest,
-      onMouseDown : this.handleMouseDown,
-      ref : node => this.node = node
+      onMouseDown : this.handleMouseDown
     })
   }
 }

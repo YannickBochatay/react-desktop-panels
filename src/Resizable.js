@@ -181,6 +181,7 @@ class Resizable extends Component {
     delete rest.onDragStart
     delete rest.onDrag
     delete rest.onDragEnd
+    delete rest.onResized
 
     const content = (
       <div { ...rest } style={ { flex : 1, ...style } } >

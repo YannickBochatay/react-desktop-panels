@@ -33823,6 +33823,7 @@ var Resizable = function (_Component) {
       delete rest.onDragStart;
       delete rest.onDrag;
       delete rest.onDragEnd;
+      delete rest.onResized;
 
       var content = _react2.default.createElement(
         "div",
@@ -33977,8 +33978,6 @@ var Resizer = function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
       var _props = this.props,
           renderer = _props.renderer,
           rest = _objectWithoutProperties(_props, ["renderer"]);
@@ -33988,10 +33987,7 @@ var Resizer = function (_Component) {
       delete rest.onDragEnd;
 
       return _react2.default.createElement(renderer, _extends({}, rest, {
-        onMouseDown: this.handleMouseDown,
-        ref: function ref(node) {
-          return _this2.node = node;
-        }
+        onMouseDown: this.handleMouseDown
       }));
     }
   }]);
