@@ -126,16 +126,16 @@ class Resizable extends Component {
 
   isControlled() {
 
-    const { size, initialSize, onDrag } = this.props
+    const { size, initialSize, onDrag, onResized } = this.props
 
-    return initialSize == null && size != null && onDrag != null
+    return initialSize == null && size != null && onDrag != null && onResized == null
   }
 
   isSemiControlled() {
 
-    const { size, initialSize, onResized, onDrag } = this.props
+    const { size, initialSize, onResized } = this.props
 
-    return initialSize == null && size != null && onResized != null && onDrag == null
+    return initialSize == null && size != null && onResized != null
   }
 
   setUnit(dimension) {
@@ -221,13 +221,13 @@ Resizable.propTypes = {
   resizerRenderer : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   onDragStart : PropTypes.func,
   onDrag : PropTypes.func,
-  onDragEnd : PropTypes.func,
-  onResized : PropTypes.func,
+  onDragEnd : PropTypes.func, // for fully controlled use
+  onResized : PropTypes.func, // for semi-controlled use
   direction : PropTypes.oneOf(["row", "column"]),
-  initialSize : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  initialSize : PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // for uncontrolled use
   minSize : PropTypes.number,
   maxSize : PropTypes.number,
-  size : PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  size : PropTypes.oneOfType([PropTypes.number, PropTypes.string]) // for semi or fully controlled use
 }
 
 Resizable.defaultProps = {
