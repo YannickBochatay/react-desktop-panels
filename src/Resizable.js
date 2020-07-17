@@ -17,30 +17,47 @@ class Resizable extends Component {
     this.xClick = null
     this.yClick = null
     this.sizeInit = null
+    this.zoomFactor = 1
 
     this.state = { size : this.props.initialSize || this.props.size }
   }
 
+  getNode() {
+    const { node } = this
+
+    return node.getBoundingClientRect ? node : ReactDOM.findDOMNode(node)
+  }
+
+  getZoomFactor() {
+    const node = this.getNode()
+    const { width, height } = node.getBoundingClientRect()
+
+    return { x : node.offsetWidth / width, y : node.offsetHeight / height }
+  }
+
   getComputedDim(unit = "px") {
+    const node = this.getNode()
 
-    let { node } = this
-
-    if (!node.getBoundingClientRect) node = ReactDOM.findDOMNode(node)
-
-    let { width, height } = node.getBoundingClientRect()
+    let width = node.offsetWidth
+    let height = node.offsetHeight
 
     if (unit === "%" && this.unit === "%") {
 
       const parent = node.parentNode
-      const dimParent = parent.getBoundingClientRect()
+      const parentWidth = parent.offsetWidth
+      const parentHeight = parent.offsetHeight
       const parentStyle = window.getComputedStyle(node.parentNode, null)
       const paddingLeft = parseFloat(parentStyle.paddingLeft)
       const paddingRight = parseFloat(parentStyle.paddingRight)
       const paddingTop = parseFloat(parentStyle.paddingTop)
       const paddingBottom = parseFloat(parentStyle.paddingBottom)
+      const borderTop = parseFloat(parentStyle.borderTopWidth)
+      const borderBottom = parseFloat(parentStyle.borderBottomWidth)
+      const borderLeft = parseFloat(parentStyle.borderLeftWidth)
+      const borderRight = parseFloat(parentStyle.borderRightWidth)
 
-      const widthParent = dimParent.width - paddingLeft - paddingRight
-      const heightParent = dimParent.height - paddingTop - paddingBottom
+      const widthParent = parentWidth - paddingLeft - paddingRight - borderLeft - borderRight
+      const heightParent = parentHeight - paddingTop - paddingBottom - borderTop - borderBottom
 
       width = Math.round(width / widthParent * 10000) / 100 + "%"
       height = Math.round(height / heightParent * 10000) / 100 + "%"
@@ -59,6 +76,7 @@ class Resizable extends Component {
 
     this.xClick = e.pageX
     this.yClick = e.pageY
+    this.zoomFactor = this.getZoomFactor()
 
     const dim = this.getComputedDim("px")
     const prop = this.getProp()
@@ -100,13 +118,15 @@ class Resizable extends Component {
 
     if (direction === "row") {
 
-      const deltaX = (e.pageX - this.xClick) * (resizerPos === "before" ? -1 : 1)
+      const offset = (e.pageX - this.xClick) * this.zoomFactor.x
+      const deltaX = offset * (resizerPos === "before" ? -1 : 1)
 
       size = Math.min(maxSize, Math.max(minSize, this.sizeInit + deltaX))
 
     } else {
 
-      const deltaY = (e.pageY - this.yClick) * (resizerPos === "before" ? -1 : 1)
+      const offset = (e.pageY - this.yClick) * this.zoomFactor.y
+      const deltaY = offset * (resizerPos === "before" ? -1 : 1)
 
       size = Math.min(maxSize, Math.max(minSize, this.sizeInit + deltaY))
     }
