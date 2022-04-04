@@ -70,8 +70,8 @@ var Example = function (_React$Component) {
     _this.handleChangeHeight = _this.handleChangeHeight.bind(_this);
 
     _this.state = {
-      width: "20%",
-      height: "50%"
+      width: 300,
+      height: 500
     };
     return _this;
   }
@@ -85,6 +85,18 @@ var Example = function (_React$Component) {
     key: "handleChangeHeight",
     value: function handleChangeHeight(height) {
       this.setState({ height: height });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        return _this2.setState({ width: "30%", height: "50%" });
+      }, 5000);
+      setTimeout(function () {
+        return _this2.setState({ width: 300, height: 500 });
+      }, 20000);
     }
   }, {
     key: "render",
@@ -30250,7 +30262,6 @@ var Resizable = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (Resizable.__proto__ || Object.getPrototypeOf(Resizable)).call(this, props));
 
-        _this.setUnit = _this.setUnit.bind(_this);
         _this.handleDragStart = _this.handleDragStart.bind(_this);
         _this.handleDrag = _this.handleDrag.bind(_this);
         _this.handleDragEnd = _this.handleDragEnd.bind(_this);
@@ -30330,6 +30341,7 @@ var Resizable = function (_Component) {
             this.xClick = e.pageX;
             this.yClick = e.pageY;
             this.zoomFactor = this.getZoomFactor();
+            this.unit = this.getUnit();
 
             var dim = this.getComputedDim("px");
             var prop = this.getProp();
@@ -30429,12 +30441,12 @@ var Resizable = function (_Component) {
             return initialSize == null && size != null && onResized != null;
         }
     }, {
-        key: "setUnit",
-        value: function setUnit(dimension) {
+        key: "getUnit",
+        value: function getUnit() {
 
-            var dim = dimension || this.getOwnDim();
+            var dim = this.getOwnDim();
 
-            this.unit = dim && /%/.test(dim) ? "%" : "px";
+            return dim && /%/.test(dim) ? "%" : "px";
         }
     }, {
         key: "setContainerStyle",
@@ -30453,11 +30465,6 @@ var Resizable = function (_Component) {
             if (size === null) style.flex = 1;else if (direction === "row") style.width = size;else style.height = size;
 
             return style;
-        }
-    }, {
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            this.setUnit(this.props.initialSize);
         }
     }, {
         key: "render",

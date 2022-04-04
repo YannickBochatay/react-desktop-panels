@@ -9,7 +9,6 @@ class Resizable extends Component {
 
     super(props)
 
-    this.setUnit = this.setUnit.bind(this)
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleDrag = this.handleDrag.bind(this)
     this.handleDragEnd = this.handleDragEnd.bind(this)
@@ -77,6 +76,7 @@ class Resizable extends Component {
     this.xClick = e.pageX
     this.yClick = e.pageY
     this.zoomFactor = this.getZoomFactor()
+    this.unit = this.getUnit()
 
     const dim = this.getComputedDim("px")
     const prop = this.getProp()
@@ -158,11 +158,11 @@ class Resizable extends Component {
     return initialSize == null && size != null && onResized != null
   }
 
-  setUnit(dimension) {
+  getUnit() {
 
-    const dim = dimension || this.getOwnDim()
+    const dim = this.getOwnDim()
 
-    this.unit = dim && /%/.test(dim) ? "%" : "px"
+    return dim && /%/.test(dim) ? "%" : "px"
   }
 
   setContainerStyle() {
@@ -182,10 +182,6 @@ class Resizable extends Component {
     else style.height = size
 
     return style
-  }
-
-  componentDidMount() {
-    this.setUnit(this.props.initialSize)
   }
 
   render() {
