@@ -1,6 +1,6 @@
 {
   "name": "react-desktop-panels",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "desktop panels with react",
   "main": "lib/Panel.js",
   "peerDependencies": {
@@ -19,7 +19,10 @@
     "browserify": "^13.1.1",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^6.8.0",
-    "watchify": "^3.8.0"
+    "watchify": "^3.8.0",
+    "prop-types": ">= 15.0.0",
+    "react": ">= 16.0.0",
+    "react-dom": ">= 16.0.0"
   },
   "scripts": {
     "build:lib": "babel src -d lib",

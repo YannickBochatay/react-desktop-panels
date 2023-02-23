@@ -42,23 +42,11 @@ class Panel extends Component {
 
   }
 
-  render() {
-
-    const {
-      stretchable,
-      resizable,
-      direction,
-      splitDirection,
-      children,
-      style,
-      size,
-      initialSize,
-      ...rest
-    } = this.props
-
+  setStyle() {
+    const { stretchable, splitDirection, style, children } = this.props
     const splitted = Children.count(children) > 1
 
-    let fullStyle = { ...style }
+    let fullStyle = {}
 
     if (stretchable) fullStyle.flex = 1
 
@@ -72,6 +60,14 @@ class Panel extends Component {
       }
 
     }
+
+    return { ...fullStyle, ...style }
+  }
+
+  render() {
+
+    const { resizable, direction, size, initialSize, ...rest } = this.props
+    const fullStyle = this.setStyle()
 
     if (resizable) {
 

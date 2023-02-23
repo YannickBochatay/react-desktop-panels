@@ -114,7 +114,7 @@ class Resizable extends Component {
     const { direction, resizerPos, minSize, maxSize, onDrag } = this.props
     const controlled = this.isControlled()
 
-    let size = this.sizeInit
+    let size
 
     if (direction === "row") {
 
