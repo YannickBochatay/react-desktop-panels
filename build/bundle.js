@@ -35359,6 +35359,9 @@ var Panel = function (_Component) {
 
       var fullStyle = this.setStyle();
 
+      delete rest.splitDirection;
+      delete rest.stretchable;
+
       if (resizable) {
 
         var resizableProps = _extends({}, rest, {

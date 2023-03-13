@@ -69,6 +69,9 @@ class Panel extends Component {
     const { resizable, direction, size, initialSize, ...rest } = this.props
     const fullStyle = this.setStyle()
 
+    delete rest.splitDirection
+    delete rest.stretchable
+
     if (resizable) {
 
       const resizableProps = {
